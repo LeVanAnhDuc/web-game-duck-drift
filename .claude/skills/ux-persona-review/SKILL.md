@@ -8,9 +8,9 @@ description: Use when you want to know how a real stranger experiences Duck Drif
 ## Sản phẩm này
 
 - Thư mục: `D:/Learn/web-app-ecosystem/web-game/web-game-asteroids`
-- Port: **`:4173`** — bản export tĩnh, đúng thứ GitHub Pages phục vụ. `:3000` là `yarn dev`,
+- Port: **`:4173`** — bản export tĩnh, đúng thứ GitHub Pages phục vụ. `:3000` là `pnpm dev`,
   **đừng dùng cho persona**: nó đụng client của Ducker ID, cũng Next.js, cũng `:3000`.
-- Bật app: `yarn build && node scripts/serve.mjs 4173 out`
+- Bật app: `pnpm build && node scripts/serve.mjs 4173 out`
 - Dấu hiệu nhận biết đúng app: tab tên đúng `Duck Drift`; màn đầu là nền tối gần đen với
   chữ `DUCK DRIFT` và bốn nút `Chơi` · `Bảng điểm` · `Cách chơi` · `Tuỳ chỉnh`, phía trên
   nút `Chơi` là dãy `Dễ · Thường · Khó`. Thấy form đăng nhập hay chữ "Ducker" → **sai app,

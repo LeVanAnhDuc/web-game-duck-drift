@@ -2,7 +2,7 @@ import type { NextConfig } from 'next'
 
 /**
  * GitHub Pages phục vụ site ở `/<tên-repo>`, còn chạy ở máy thì nó nằm ở gốc.
- * `GITHUB_PAGES` chỉ được workflow deploy đặt, nên `yarn dev` và `yarn build` ở
+ * `GITHUB_PAGES` chỉ được workflow deploy đặt, nên `pnpm dev` và `pnpm build` ở
  * máy vẫn chạy ở gốc — xem `.env.example`.
  */
 const isGithubPages = process.env.GITHUB_PAGES === 'true'

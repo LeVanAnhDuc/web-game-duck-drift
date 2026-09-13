@@ -27,9 +27,9 @@ fi
 
 cd "$root" || exit 1
 
-if ! npx --no-install eslint --max-warnings=0 "${staged[@]}"; then
+if ! pnpm exec eslint --max-warnings=0 "${staged[@]}"; then
   printf '\n  Commit bị chặn: ESLint báo lỗi ở file đang staged.\n' >&2
-  printf '  Sửa tự động được phần lớn : npx eslint --fix %s\n' "${staged[*]}" >&2
+  printf '  Sửa tự động được phần lớn : pnpm exec eslint --fix %s\n' "${staged[*]}" >&2
   printf '  Bỏ qua có chủ đích (hiếm) : git commit --no-verify\n\n' >&2
   exit 1
 fi

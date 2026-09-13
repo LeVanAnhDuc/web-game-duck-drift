@@ -22,7 +22,7 @@ let html;
 try {
   html = readFileSync(join(root, page), "utf8");
 } catch {
-  console.error(`cannot read ${join(root, page)} - run \`yarn build\` first`);
+  console.error(`cannot read ${join(root, page)} - run \`pnpm build\` first`);
   process.exit(1);
 }
 

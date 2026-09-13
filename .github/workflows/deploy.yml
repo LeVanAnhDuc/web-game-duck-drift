@@ -22,27 +22,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: yarn
+          cache: pnpm
 
-      - run: yarn install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
 
       # Lint chay o day chu khong chi trong ci.yml: `build` bat duoc loi kieu
       # nhung khong bat vi pham lint, va mot push thang vao `main` khong di
       # qua pull request.
-      - run: yarn lint
+      - run: pnpm lint
 
       # Test chạy lại ở đây thay vì tin vào workflow CI: hai workflow này độc lập,
       # và một deploy giả định rằng có một lần chạy xanh mà nó không nhìn thấy là
       # một deploy sớm muộn sẽ đẩy bản đỏ lên.
-      - run: yarn test
+      - run: pnpm test
 
-      - run: yarn build
+      - run: pnpm build
         env:
           # Chỉ đặt ở đây. Nó bật basePath cho đường dẫn con /web-game-duck-drift;
-          # `yarn dev` và build ở máy vẫn chạy ở gốc.
+          # `pnpm dev` và build ở máy vẫn chạy ở gốc.
           GITHUB_PAGES: 'true'
 
       # KHÔNG dùng `enablement: true`: đã thử và nó đỏ với "Resource not

@@ -73,9 +73,12 @@ Một frame, kể từ khi người chơi bấm phím:
 | Vòng lặp       | Fixed timestep 60Hz tự viết               | ADR-0003  |
 | Lưu điểm       | `localStorage` sau interface `ScoreStore` | ADR-0006  |
 | Test           | Vitest + happy-dom + Testing Library      | ADR-0001  |
-| Quản lý gói    | Yarn classic 1.x                          | ADR-0001  |
+| Quản lý gói    | pnpm 10.x                                 | ADR-0001  |
 | Design tokens  | `docs/design-system/asteroids/MASTER.md`  | ADR-0007  |
 | E2E            | Playwright, 5 cấu hình, chạy trên `out/`  | ADR-0008  |
 | CI             | GitHub Actions, hai job song song         | ADR-0008  |
 | Hosting        | GitHub Pages, publish từ workflow         | ADR-0008  |
 | Phát hành      | Tag và note suy từ lịch sử commit         | ADR-0009  |
+
+ADR-0001 chọn Yarn classic cho phần quản lý gói; cả thư mục `web-game/` đã chuyển
+sang pnpm 10 sau đó. ADR giữ nguyên như đã viết — nó là bản ghi của quyết định lúc đó.
