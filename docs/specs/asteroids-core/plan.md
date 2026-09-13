@@ -10,7 +10,7 @@ Thiết kế: [`design.md`](design.md). Branch: `feat/asteroids-core`.
       `package.json` · `tsconfig.json` · `next.config.ts` (`output: 'export'`) · `tailwind.config.ts` · `postcss.config.mjs` · `vitest.config.mts` · `.eslintrc.json` · `src/app/layout.tsx` · `src/app/globals.css`
       Token của `MASTER.md` §0 vào `globals.css` dạng biến CSS và vào `tailwind.config.ts`. Font qua `next/font/google` (tải kèm build, `NFR-SEC-03`).
       ESLint `no-restricted-globals` + `no-restricted-imports` cho `src/game/core/**` (bất biến #1).
-      _Xong khi:_ `yarn typecheck` và `yarn test` chạy được (kể cả khi chưa có test nào).
+      _Xong khi:_ `pnpm typecheck` và `pnpm test` chạy được (kể cả khi chưa có test nào).
 
 - [x] **T2 · Kiểu dữ liệu, hằng số, RNG, toán vector**
       `src/game/core/types.ts` · `constants.ts` · `rng.ts` · `vector.ts`
@@ -49,7 +49,7 @@ Thiết kế: [`design.md`](design.md). Branch: `feat/asteroids-core`.
 ## Giai đoạn 4 — Chốt
 
 - [x] **T8 · Kiểm chứng**
-      `yarn typecheck` · `yarn lint` · `yarn test` · `yarn build` · kiểm kích thước bundle so với `NFR-PERF-04`.
+      `pnpm typecheck` · `pnpm lint` · `pnpm test` · `pnpm build` · kiểm kích thước bundle so với `NFR-PERF-04`.
 
 - [x] **T9 · Nhìn app chạy thật**
       **Đã kiểm trên app đang chạy:** menu · bắt đầu ván · bắn trúng và cộng 20 điểm · thiên thạch to tách thành mảnh vừa · mất một mạng và HUD còn 2 mạng · tạm dừng bằng Esc · thông báo `aria-live` phát đúng câu "Mất một mạng. Còn 2 mạng." · letterbox đúng khung thế giới (đo pixel: nội dung nằm trong 400–1508 trên khung 397–1523).

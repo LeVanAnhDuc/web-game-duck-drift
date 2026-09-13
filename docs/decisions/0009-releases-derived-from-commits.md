@@ -15,7 +15,7 @@ Dự án cần đánh dấu các mốc phát hành để biết bản đang ch�
 - `scripts/next-version.sh` — quyết định tag kế tiếp so với tag `v*` gần nhất: có commit `feat!:`/`BREAKING CHANGE:` thì **major**, có `feat:` thì **minor**, còn lại **patch**. Subject của commit HEAD ghi đè được bằng `[release major]`, `[release minor]`, hoặc `[skip release]` để không phát hành gì. In ra chuỗi rỗng nghĩa là "không release" — HEAD đã có tag, hoặc bị `[skip release]`.
 - `scripts/release-notes.sh` — soạn note từ subject của các commit kể từ tag trước, nhóm theo tiền tố: breaking trước, rồi What's new (`feat`), Fixes (`fix`), Performance, Internals, Tests, Documentation, Build and tooling. Scope giữ lại làm nhãn, nên `feat(game): …` đọc thành **game**: …
 
-Cả hai **là script trong repo, không phải shell chôn trong workflow**, và có lối gọi ở `package.json`: `yarn release:next`, `yarn release:notes v1.1.0`.
+Cả hai **là script trong repo, không phải shell chôn trong workflow**, và có lối gọi ở `package.json`: `pnpm release:next`, `pnpm release:notes v1.1.0`.
 
 Marker chỉ được đọc ở **subject** của commit HEAD, không đọc trong body.
 
@@ -34,7 +34,7 @@ Marker chỉ được đọc ở **subject** của commit HEAD, không đọc tr
 **Được:**
 
 - Không có bước thủ công nào giữa "merge vào main" và "có release kèm note".
-- Thử được ở máy trước khi tin: `yarn release:next` in ra cả tag và **lý do** chọn tag đó.
+- Thử được ở máy trước khi tin: `pnpm release:next` in ra cả tag và **lý do** chọn tag đó.
 - Commit nào không phải Conventional Commit vẫn được liệt vào mục "Other" chứ không bị bỏ. Một release note âm thầm nuốt commit là release note đã bắt đầu nói sai.
 
 **Mất / phải chấp nhận:**

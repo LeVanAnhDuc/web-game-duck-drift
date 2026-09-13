@@ -21,7 +21,7 @@
 - **NFR-A11Y-06:** đổi mạng, đổi wave, hết lượt công bố qua `aria-live`.
 - **NFR-I18N-01:** không hardcode chuỗi hiển thị; mọi chuỗi ở `src/i18n/vi.ts`. Task 2 **không** đổi chuỗi nào, chỉ đổi thời điểm phát.
 - Conventional Commits, subject tiếng Anh. **Không commit vào `main`** — branch từ `origin/main` mới nhất.
-- Lệnh: `yarn test` · `yarn typecheck` · `yarn lint` · `yarn build` · `yarn test:e2e` · `yarn format` · `yarn check:bundle`.
+- Lệnh: `pnpm test` · `pnpm typecheck` · `pnpm lint` · `pnpm build` · `pnpm test:e2e` · `pnpm format` · `pnpm check:bundle`.
 
 ---
 
@@ -55,7 +55,7 @@
 - [x] `core/ship.ts`: `killShip` bỏ dòng `state.announce = ANNOUNCE.gameOver(...)`, chỉ đặt `state.phase = 'gameover'`.
 - [x] `core/step.ts`: cuối step, nếu pha vừa chuyển sang `gameover` trong step này thì phát `ANNOUNCE.gameOver(state.score)`. Không ghi đè câu `lifeLost`/`wave` đã có nếu pha không chuyển.
 - [x] Chạy lại **NFR-ROB-04** (test tái lập 1000 bước) và test benchmark `step()` (**NFR-PERF-02**, < 4ms).
-- [x] `yarn test` xanh.
+- [x] `pnpm test` xanh.
 
 ### 3. Lỗi B · bàn phím sở hữu phím theo pha
 
@@ -65,7 +65,7 @@
 - [x] Test đỏ: đang giữ phím đẩy rồi pha rời `'playing'` ⇒ `input` được dọn (không dính trạng thái đang đẩy sang ván sau).
 - [x] `input/keyboard.ts`: thêm `getPhase: () => Phase | null` vào `KeyboardOptions`; áp đúng bảng ở ADR-0015. Export hàm dọn hoặc gọi `resetInput` khi rời pha.
 - [x] `hooks/useGame.ts`: truyền `getPhase: () => stateRef.current?.phase ?? null`. Thêm effect dọn `input` khi pha rời `'playing'`. Giữ dependency ổn định — đừng làm effect gắn lại mỗi render.
-- [x] `yarn test` xanh.
+- [x] `pnpm test` xanh.
 
 ### 4. Lỗi A · hạng lúc hết lượt nằm trong state
 
@@ -75,7 +75,7 @@
 - [x] `views/Home/index.tsx`: `rankRef` → `useState<number | null>(null)`; `freezeRank` thành setter ổn định.
 - [x] `ghosts/FreezeRankAtGameOver/index.tsx`: `useEffect` → `useLayoutEffect`; sửa doc comment cho khớp (comment hiện tại nói về `JSON.parse` mỗi render — vẫn đúng, giữ).
 - [x] Kiểm không sinh render mỗi frame: chạy test đếm render của **NFR-PERF-03**.
-- [x] `yarn test` xanh.
+- [x] `pnpm test` xanh.
 
 ### 5. E2E
 
@@ -84,7 +84,7 @@
 - [x] Ở màn Tuỳ chỉnh, đẩy `UFO từ wave` tới max **bằng bàn phím** ⇒ nhãn hiện `tắt` (đóng phần thật của F-06).
 - [x] Ván đầu tiên sau khi tải trang, chọn Khó, ngồi yên tới hết lượt ⇒ panel hiện hạng `#1` và có form nhập tên; chuỗi trong vùng `aria-live` và số trên panel **khớp nhau** (đóng F-01 + lỗi C).
 - [x] Trong lúc chơi, mũi tên và `Space` vẫn điều khiển tàu và **không** cuộn trang.
-- [x] `yarn test:e2e` xanh.
+- [x] `pnpm test:e2e` xanh.
 
 ### 6. Ba ADR
 
@@ -95,14 +95,14 @@
 
 ### 7. Xem trên app thật — bước 5 của `feature-flow`
 
-- [x] `yarn build && node scripts/serve.mjs 4173 out`, đối chiếu dấu hiệu nhận biết app.
+- [x] `pnpm build && node scripts/serve.mjs 4173 out`, đối chiếu dấu hiệu nhận biết app.
 - [x] Ảnh ở **375 · 768 · 1024 · 1440**: menu · Tuỳ chỉnh · Hết lượt có form.
 - [x] Thao tác thật: Tab qua hết menu, `Space` trên nút, mũi tên trên cả 4 thanh trượt, `UFO từ wave` tới "tắt" bằng bàn phím.
 - [x] **Xoá `localStorage` trước khi kiểm** — đây đúng cái lỗi vận hành đã làm hỏng lần chạy persona; đừng lặp lại.
 
 ### 8. Cổng chất lượng
 
-- [x] `yarn typecheck` · `yarn lint` · `yarn test` · `yarn test:e2e` · `yarn build` · `yarn check:bundle` (trần 200 kB gzip) · `yarn format`.
+- [x] `pnpm typecheck` · `pnpm lint` · `pnpm test` · `pnpm test:e2e` · `pnpm build` · `pnpm check:bundle` (trần 200 kB gzip) · `pnpm format`.
 - [x] `requesting-code-review` → `verification-before-completion`.
 
 ### 9. Đóng việc

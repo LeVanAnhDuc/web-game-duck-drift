@@ -22,7 +22,7 @@
 - **NFR-I18N-01:** không hardcode chuỗi hiển thị trong component; mọi chuỗi ở `src/i18n/vi.ts`.
 - **Không đổi khoá `asteroids.highscores.v1`** — đổi là xoá bảng điểm của người đang chơi.
 - Conventional Commits, subject tiếng Anh. Không commit vào `main`.
-- Lệnh: `yarn test` · `yarn typecheck` · `yarn lint` · `yarn build` · `yarn test:e2e` · `yarn format`.
+- Lệnh: `pnpm test` · `pnpm typecheck` · `pnpm lint` · `pnpm build` · `pnpm test:e2e` · `pnpm format`.
 
 ---
 
@@ -149,7 +149,7 @@ describe('tuning trong GameState — ADR-0010', () => {
 
 - [ ] **Bước 2: Chạy test để chắc chắn nó đỏ**
 
-Chạy: `yarn test src/game/core/difficulty.test.ts`
+Chạy: `pnpm test src/game/core/difficulty.test.ts`
 Mong đợi: FAIL — `DIFFICULTY`, `UFO_NEVER`, `TUNING_LIMITS` chưa tồn tại.
 
 - [ ] **Bước 3: Thêm kiểu vào `types.ts`**
@@ -274,7 +274,7 @@ export function resetForNewGame(state: GameState, options: NewGameOptions = {}):
 
 - [ ] **Bước 6: Chạy toàn bộ test**
 
-Chạy: `yarn test && yarn typecheck`
+Chạy: `pnpm test && pnpm typecheck`
 Mong đợi: PASS. 151 test cũ vẫn xanh — không call site nào truyền seed vào `resetForNewGame`, nên chữ ký mới tương thích ngược.
 
 - [ ] **Bước 7: Commit**
@@ -409,7 +409,7 @@ it('cùng seed VÀ cùng tuning thì cùng một trạng thái; đổi tuning th
 
 - [ ] **Bước 2: Chạy test để chắc chắn nó đỏ**
 
-Chạy: `yarn test src/game/core/difficulty.test.ts`
+Chạy: `pnpm test src/game/core/difficulty.test.ts`
 Mong đợi: FAIL — `newGame` chưa nhận tham số thứ hai, `waveSpeedFactor` chưa nhận tham số thứ hai.
 
 - [ ] **Bước 3: Sửa `asteroids.ts`**
@@ -482,7 +482,7 @@ expect(waveSpeedFactor(50, 1)).toBe(WAVE.maxSpeedFactor)
 
 - [ ] **Bước 7: Chạy toàn bộ test**
 
-Chạy: `yarn test && yarn typecheck && yarn lint`
+Chạy: `pnpm test && pnpm typecheck && pnpm lint`
 Mong đợi: PASS. Nếu ESLint báo lõi đọc thứ bị cấm thì **không** tắt rule — sai chỗ khác.
 
 - [ ] **Bước 8: Commit**
@@ -587,7 +587,7 @@ function mapStorage(): Storage {
 
 - [ ] **Bước 2: Chạy test để chắc chắn nó đỏ**
 
-Chạy: `yarn test src/storage/scoreStore.test.ts`
+Chạy: `pnpm test src/storage/scoreStore.test.ts`
 Mong đợi: FAIL — `SCORE_KEYS` chưa tồn tại.
 
 - [ ] **Bước 3: Sửa `localScoreStore.ts`**
@@ -617,7 +617,7 @@ Rồi thay `STORAGE_KEY` bằng `key` ở ba chỗ trong thân hàm (`getItem`, 
 
 - [ ] **Bước 4: Chạy test**
 
-Chạy: `yarn test src/storage && yarn typecheck`
+Chạy: `pnpm test src/storage && pnpm typecheck`
 Mong đợi: PASS, kể cả 12 test cũ của `scoreStore.test.ts` — chúng gọi `createLocalScoreStore(fakeStorage(...))` không truyền khoá, nên mặc định vẫn là khoá cũ.
 
 - [ ] **Bước 5: Commit**
@@ -755,7 +755,7 @@ describe('bốn số Tuỳ chỉnh — FR-21', () => {
 
 - [ ] **Bước 2: Chạy test để chắc chắn nó đỏ**
 
-Chạy: `yarn test src/storage/settingsStore.test.ts`
+Chạy: `pnpm test src/storage/settingsStore.test.ts`
 Mong đợi: FAIL — file chưa tồn tại.
 
 - [ ] **Bước 3: Viết `src/storage/settingsStore.ts`**
@@ -852,7 +852,7 @@ function safeStorage(): Storage | null {
 
 - [ ] **Bước 4: Chạy test**
 
-Chạy: `yarn test src/storage && yarn typecheck && yarn lint`
+Chạy: `pnpm test src/storage && pnpm typecheck && pnpm lint`
 Mong đợi: PASS.
 
 - [ ] **Bước 5: Commit**
@@ -985,7 +985,7 @@ describe('TuningSlider — FR-21 · NFR-A11Y-03', () => {
 
 - [ ] **Bước 2: Chạy test để chắc chắn nó đỏ**
 
-Chạy: `yarn test src/components`
+Chạy: `pnpm test src/components`
 Mong đợi: FAIL — `Segmented` và `TuningSlider` chưa tồn tại.
 
 - [ ] **Bước 3: Thêm chuỗi vào `src/i18n/vi.ts`**
@@ -1132,7 +1132,7 @@ export function TuningSlider({
 
 - [ ] **Bước 5: Chạy test**
 
-Chạy: `yarn test src/components && yarn typecheck && yarn lint`
+Chạy: `pnpm test src/components && pnpm typecheck && pnpm lint`
 Mong đợi: PASS.
 
 - [ ] **Bước 6: Commit**
@@ -1270,7 +1270,7 @@ describe('CustomScreen — FR-21', () => {
 
 - [ ] **Bước 2: Chạy test để chắc chắn nó đỏ**
 
-Chạy: `yarn test src/components`
+Chạy: `pnpm test src/components`
 Mong đợi: FAIL — `CustomScreen` chưa tồn tại, `MenuScreen` chưa nhận props mới.
 
 - [ ] **Bước 3: Viết `src/components/CustomScreen.tsx`**
@@ -1407,7 +1407,7 @@ export function MenuScreen({
 
 - [ ] **Bước 5: Chạy test**
 
-Chạy: `yarn test src/components && yarn typecheck && yarn lint`
+Chạy: `pnpm test src/components && pnpm typecheck && pnpm lint`
 Mong đợi: PASS.
 
 - [ ] **Bước 6: Commit**
@@ -1472,7 +1472,7 @@ describe('bảng điểm ba tab — FR-22', () => {
 
 - [ ] **Bước 2: Chạy test để chắc chắn nó đỏ**
 
-Chạy: `yarn test src/components`
+Chạy: `pnpm test src/components`
 Mong đợi: FAIL — `HighScoresScreen` chưa nhận `difficulty`.
 
 - [ ] **Bước 3: Sửa `HighScoresScreen.tsx`**
@@ -1516,7 +1516,7 @@ Ngay dưới `<ScreenTitle>`, thêm dãy tab:
 
 - [ ] **Bước 4: Chạy test**
 
-Chạy: `yarn test src/components && yarn typecheck && yarn lint`
+Chạy: `pnpm test src/components && pnpm typecheck && pnpm lint`
 Mong đợi: PASS, kể cả test cũ của `HighScoresScreen` (chúng phải được thêm prop `difficulty`/`onDifficulty` — sửa chúng, đừng đặt giá trị mặc định cho prop chỉ để test cũ khỏi phải sửa).
 
 - [ ] **Bước 5: Commit**
@@ -1586,7 +1586,7 @@ describe('màn Hết lượt ở ván tuỳ chỉnh — FR-21', () => {
 
 - [ ] **Bước 2: Chạy test để chắc chắn nó đỏ**
 
-Chạy: `yarn test src/components`
+Chạy: `pnpm test src/components`
 Mong đợi: FAIL — `canSave` chưa là prop.
 
 - [ ] **Bước 3: Sửa `Overlays.tsx`**
@@ -1758,7 +1758,7 @@ const showTable = (id: Exclude<DifficultyId, 'custom'>) => {
 
 - [ ] **Bước 6: Chạy tất cả**
 
-Chạy: `yarn test && yarn typecheck && yarn lint && yarn build && yarn check:bundle`
+Chạy: `pnpm test && pnpm typecheck && pnpm lint && pnpm build && pnpm check:bundle`
 Mong đợi: PASS, bundle vẫn ≤ 200KB gzip (`NFR-PERF-04`; mốc trước là 117 kB).
 
 - [ ] **Bước 7: Commit**
@@ -1792,7 +1792,7 @@ opens its tab. A custom game is never offered a name prompt."
 
 `e2e/game.spec.ts:19` bấm `getByRole('button', { name: 'Chơi', exact: true })`. Dãy mức mới **không** có nút nào tên 'Chơi', nên selector vẫn khớp đúng một phần tử. Chạy để chắc:
 
-Chạy: `yarn build && yarn test:e2e`
+Chạy: `pnpm build && pnpm test:e2e`
 Mong đợi: 5 cấu hình đều PASS. Nếu selector trở thành nhập nhằng, sửa `startGame()` thành `getByRole('button', { name: 'Chơi', exact: true }).first()` — **không** đổi nhãn nút.
 
 - [ ] **Bước 2: Viết `e2e/modes.spec.ts`**
@@ -1851,7 +1851,7 @@ test.describe('chế độ Tuỳ chỉnh — US-08', () => {
 
 - [ ] **Bước 3: Chạy E2E**
 
-Chạy: `yarn build && yarn test:e2e`
+Chạy: `pnpm build && pnpm test:e2e`
 Mong đợi: PASS ở cả 5 cấu hình.
 
 - [ ] **Bước 4: Cập nhật `README.md` §Features**
@@ -1867,11 +1867,11 @@ Thêm một dòng, đúng văn phong các dòng đang có:
 - `docs/02-requirements/scope.md`: FR-20 · FR-21 · FR-22 đổi trạng thái `đang làm` → `xong`.
 - `docs/04-state/backlog.md` §Đang làm: xoá khối của feature này, ghi lại đúng những gì đã xong.
 - `docs/04-state/backlog.md` §Nợ kỹ thuật: thêm một dòng — số của mức Dễ và Khó là ước lượng trên giấy, chưa chơi thử; phải trả sau lần chơi thật đầu tiên, cùng lúc với dòng nợ đang có của `constants.ts`.
-- Chạy `yarn format` để Prettier canh lại các bảng markdown vừa sửa tay.
+- Chạy `pnpm format` để Prettier canh lại các bảng markdown vừa sửa tay.
 
 - [ ] **Bước 6: Chạy toàn bộ gate lần cuối**
 
-Chạy: `yarn test && yarn typecheck && yarn lint && yarn build && yarn check:bundle && yarn test:e2e`
+Chạy: `pnpm test && pnpm typecheck && pnpm lint && pnpm build && pnpm check:bundle && pnpm test:e2e`
 Mong đợi: tất cả PASS.
 
 - [ ] **Bước 7: Commit**
