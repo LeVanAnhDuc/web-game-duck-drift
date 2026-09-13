@@ -41,7 +41,7 @@ Playwright chạy trên **bản export tĩnh** qua `scripts/serve.mjs`, ở **n�
 - Ba khổ hẹp và một màn hình cảm ứng thật được kiểm ở **mỗi** PR, thay vì chờ ai đó nhớ mở tay.
 - `NFR-PERF-04` và `NFR-SEC-02` từ chỗ là câu chữ trong tài liệu thành gate chạy được. Số đo hiện tại: 114.1 kB / 200 kB.
 - Mọi push vào `main` tự lên `https://levananhduc.github.io/web-game-duck-drift/`.
-- Script chạy được ở máy (`yarn check:bundle`, `yarn check:audit`), nên gate nào đỏ cũng tái hiện được mà không cần đẩy lên CI.
+- Script chạy được ở máy (`pnpm check:bundle`, `pnpm check:audit`), nên gate nào đỏ cũng tái hiện được mà không cần đẩy lên CI.
 
 **Mất / phải chấp nhận:**
 

@@ -12,6 +12,8 @@ Game này là một trang duy nhất, không backend, trần chi phí hạ tần
 
 Next.js 15 App Router với `output: 'export'`, React 19, TypeScript 5, Tailwind CSS 3, Vitest + happy-dom + Testing Library, quản lý gói bằng **Yarn classic 1.x**. Build ra `out/` là file tĩnh thuần. Font Space Grotesk và JetBrains Mono tải kèm build qua `next/font`, không lấy từ CDN lúc chạy (`NFR-SEC-03`).
 
+> **Superseded 13.09.2026** — the workspace moved to pnpm 10; see the `build(deps)` commit that converted this repo.
+
 ## 3. Phương án đã loại
 
 | Phương án                                | Vì sao loại                                                                                                                                                                    |

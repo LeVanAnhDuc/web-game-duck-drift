@@ -29,7 +29,7 @@
 - [ ] Test đỏ: khi `ship.invulnMs > 0` ở nhịp mờ, `globalAlpha` dùng để vẽ tàu **≥ 0.55**.
 - [ ] `draw.ts`: nét tàu `lw(2.8)` → `lw(3.6)`; đáy `blinkAlpha` `0.4` → `0.55`.
 - [ ] `docs/design-system/asteroids/MASTER.md`: dòng "Bất tử (nhấp nháy)" 40% → 55%; ghi thêm rằng nét tàu là nét nặng nhất trên canvas.
-- [ ] `yarn test` xanh.
+- [ ] `pnpm test` xanh.
 
 ### 3. F-02 — dòng gợi ý điều khiển
 
@@ -37,14 +37,14 @@
 - [ ] Test đỏ cho `ControlsHint`: hiện khi `score=0 · wave=1`; ẩn khi `score>0`, ẩn khi `wave>1`.
 - [ ] `src/views/Home/components/ControlsHint/index.tsx` — component thuần, nhận `hud` và `coarse`.
 - [ ] `src/views/Home/index.tsx`: render khi `playing && !coarse`, đặt dưới HUD.
-- [ ] `yarn test` xanh.
+- [ ] `pnpm test` xanh.
 
 ### 4. E2E
 
 - [ ] 1440: vào ván thì thấy dòng gợi ý.
 - [ ] Sau khi có điểm thì dòng gợi ý không còn.
 - [ ] Profile `touch-phone`: gợi ý **không** hiện, năm nút cảm ứng vẫn đủ (chống hồi quy §0).
-- [ ] `yarn test:e2e` xanh.
+- [ ] `pnpm test:e2e` xanh.
 
 ### 5. ADR
 
@@ -57,8 +57,8 @@
 
 ### 7. Cổng chất lượng
 
-- [ ] `yarn typecheck` · `yarn lint` · `yarn test` · `yarn test:e2e` · `yarn build` · `yarn check:bundle`.
-- [ ] `yarn format` **chỉ trên file của pass này** — lần trước nó định dạng lại cả repo và phải revert thủ công.
+- [ ] `pnpm typecheck` · `pnpm lint` · `pnpm test` · `pnpm test:e2e` · `pnpm build` · `pnpm check:bundle`.
+- [ ] `pnpm format` **chỉ trên file của pass này** — lần trước nó định dạng lại cả repo và phải revert thủ công.
 
 ### 8. Đóng việc
 
