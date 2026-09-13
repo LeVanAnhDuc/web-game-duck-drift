@@ -126,7 +126,7 @@ several at once costs ~18k tokens and produces conflicting guidance.
   logo, banner, slide, or brand-asset work.
 - **`ui-styling` only applies if this project turns out to use React + Tailwind +
   shadcn/ui.** That skill hard-codes shadcn/Radix/Tailwind, down to
-  `npx shadcn@latest init`. Detect the stack from `package.json` first; if it is
+  `pnpm dlx shadcn@latest init`. Detect the stack from `package.json` first; if it is
   anything else (Ant Design, Vuetify, MUI, plain CSS), ignore this skill even
   when it fires on its own.
 

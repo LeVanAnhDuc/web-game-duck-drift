@@ -23,32 +23,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: yarn
+          cache: pnpm
 
-      - run: yarn install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
 
       - name: Lint
         # Gồm cả rule chặn Math.random / Date.now / DOM trong src/game/core —
         # bất biến #1. Đây là chỗ duy nhất nó được kiểm tự động.
-        run: yarn lint
+        run: pnpm lint
 
       - name: Typecheck
-        run: yarn typecheck
+        run: pnpm typecheck
 
       - name: Unit and component tests
-        run: yarn test
+        run: pnpm test
 
-      # KHÔNG có bước `yarn audit` ở đây, có chủ ý. Endpoint audit của yarn 1 trả về
-      # một summary rỗng (0 dependency, 0 devDependency) kèm exit code 0, nên bất kỳ
-      # gate dựng trên nó cũng xanh vĩnh viễn — một cổng bảo mật không bao giờ đỏ
-      # được thì tệ hơn không có cổng, vì người ta tin nó.
-      # `scripts/check-audit.mjs` giờ phát hiện và báo đỏ tình trạng đó; nó dành cho
-      # việc chạy ở máy. Việc gate thật do job `dependency-review` bên dưới làm.
+      # KHÔNG có bước audit nào ở đây, có chủ ý. Lý do gốc: endpoint audit của
+      # yarn 1 trả về một summary rỗng (0 dependency, 0 devDependency) kèm exit
+      # code 0, nên bất kỳ gate dựng trên nó cũng xanh vĩnh viễn — một cổng bảo
+      # mật không bao giờ đỏ được thì tệ hơn không có cổng, vì người ta tin nó.
+      # Sang pnpm thì `pnpm audit` đọc đúng advisory database và CÓ THỂ đỏ thật
+      # (xem scripts/check-audit.mjs, chạy ở máy bằng `pnpm check:audit`), nhưng
+      # cổng chặn trong CI vẫn là `dependency-review` bên dưới: nó đọc advisory
+      # của GitHub, không phụ thuộc endpoint của registry nào.
 
-  # NFR-SEC-02, đọc từ advisory database của GitHub thay vì endpoint của yarn.
+  # NFR-SEC-02, đọc từ advisory database của GitHub thay vì endpoint của registry.
   # Chỉ chạy trên pull request được: action này so sánh cây phụ thuộc của base với
   # của head, nên nó cần hai đầu để so.
   dependency-review:
@@ -68,15 +72,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: yarn
+          cache: pnpm
 
-      - run: yarn install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
 
       - name: Build the static export
-        run: yarn build
+        run: pnpm build
 
       # NFR-PERF-04, đo từ HTML đã export chứ không đọc bảng của `next build`:
       # thứ `out/index.html` tham chiếu chính là thứ trình duyệt tải về. Gate dựng
@@ -86,12 +92,12 @@ jobs:
         run: node scripts/check-bundle-size.mjs out
 
       - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium
 
       # Chạy trên out/ qua scripts/serve.mjs — đúng thứ GitHub Pages sẽ phục vụ —
       # ở 375 / 768 / 1024 / 1440 và trên một điện thoại cảm ứng.
       - name: End-to-end tests
-        run: yarn test:e2e
+        run: pnpm test:e2e
 
       - if: failure()
         uses: actions/upload-artifact@v4

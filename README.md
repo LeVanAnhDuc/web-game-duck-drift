@@ -43,32 +43,34 @@ one you reach for least.
 ## Commands
 
 ```bash
-yarn install
-yarn dev          # http://localhost:3000
-yarn test         # unit + component tests
-yarn test:e2e     # Playwright, against the static export in out/
-yarn typecheck
-yarn lint
-yarn build        # writes out/
+pnpm install
+pnpm dev          # http://localhost:3000
+pnpm test         # unit + component tests
+pnpm test:e2e     # Playwright, against the static export in out/
+pnpm typecheck
+pnpm lint
+pnpm build        # writes out/
 ```
 
-`yarn test:e2e` needs a build first (`yarn build`) and a Chromium install
-(`npx playwright install chromium`). No environment variables are needed to run
-locally — see [`.env.example`](.env.example).
+`pnpm test:e2e` needs a build first (`pnpm build`) and a Chromium install
+(`pnpm exec playwright install chromium`). No environment variables are needed to
+run locally — see [`.env.example`](.env.example).
 
 Two checks enforce thresholds that would otherwise only be written down:
 
 ```bash
-yarn check:bundle   # NFR-PERF-04: first-load JS, measured from the exported HTML
-yarn check:audit    # NFR-SEC-02: reads yarn audit, and fails if the audit did not run
+pnpm check:bundle   # NFR-PERF-04: first-load JS, measured from the exported HTML
+pnpm check:audit    # NFR-SEC-02: reads pnpm audit, and fails if the audit did not run
 ```
 
-⚠️ **`yarn check:audit` currently fails, and that is the correct output.** Yarn 1's
-audit endpoint answers with an empty summary — `0 dependencies`, `0 devDependencies`
-— and exit code 0, so any gate built on it passes forever. The script detects that
-and reports "could not be checked" instead of a meaningless green tick. `NFR-SEC-02`
-is actually gated by the `dependency-review` job on every pull request, plus
-Dependabot alerts.
+`pnpm check:audit` used to fail on principle: under Yarn classic the audit endpoint
+answered with an empty summary — `0 dependencies`, `0 devDependencies` — and exit
+code 0, so any gate built on it passed forever, and the script reported "could not
+be checked" rather than a meaningless green tick. `pnpm audit` reaches an endpoint
+that answers, so the check now scans the real tree and can genuinely go red. The
+refusal to report an unjustified pass is still in there, because that failure mode
+is a silent one. `NFR-SEC-02` is gated in CI by the `dependency-review` job on every
+pull request, plus Dependabot alerts.
 
 ## How it is put together
 
@@ -133,8 +135,8 @@ locally — a release process you can only exercise by pushing to `main` is one 
 exercises:
 
 ```bash
-yarn release:next            # which tag the next release would get, and why
-yarn release:notes v1.1.0    # what its notes would say
+pnpm release:next            # which tag the next release would get, and why
+pnpm release:notes v1.1.0    # what its notes would say
 ```
 
 **How the version is decided**, against the previous `v*` tag:

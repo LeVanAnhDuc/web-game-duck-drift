@@ -2,6 +2,7 @@
   "name": "web-game-duck-drift",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.32.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,9 +15,9 @@
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
     "check:bundle": "node scripts/check-bundle-size.mjs out",
-    "check:audit": "yarn audit --json | node scripts/check-audit.mjs",
-    "release:next": "npx --yes git-cliff@2.13.1 --bumped-version",
-    "release:notes": "npx --yes git-cliff@2.13.1 --unreleased --tag $(npx --yes git-cliff@2.13.1 --bumped-version) --strip all"
+    "check:audit": "pnpm audit --json | node scripts/check-audit.mjs",
+    "release:next": "pnpm dlx git-cliff@2.13.1 --bumped-version",
+    "release:notes": "pnpm dlx git-cliff@2.13.1 --unreleased --tag $(pnpm dlx git-cliff@2.13.1 --bumped-version) --strip all"
   },
   "dependencies": {
     "next": "^15.5.0",
@@ -47,7 +48,12 @@
     "vite": "^8.0.0",
     "vitest": "^4.0.0"
   },
-  "resolutions": {
-    "postcss": "^8.5.18"
+  "pnpm": {
+    "overrides": {
+      "postcss": "^8.5.18"
+    },
+    "onlyBuiltDependencies": [
+      "unrs-resolver"
+    ]
   }
 }
