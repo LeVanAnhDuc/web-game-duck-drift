@@ -27,8 +27,8 @@
 | [`ux-reviews/2026-09-11-lop-vo-7-red-route/p05-BLIND2.md`](ux-reviews/2026-09-11-lop-vo-7-red-route/p05-BLIND2.md) | — | — | — |
 | [`ux-reviews/2026-09-11-lop-vo-7-red-route/p05-RR04.md`](ux-reviews/2026-09-11-lop-vo-7-red-route/p05-RR04.md) | — | — | — |
 | [`ux-reviews/2026-09-11-lop-vo-7-red-route/p06-RR06.md`](ux-reviews/2026-09-11-lop-vo-7-red-route/p06-RR06.md) | — | — | — |
-| [`decisions/`](decisions/README.md) | Tại sao lại làm thế này? | 18 ADR | mỗi quyết định kỹ thuật |
-| [`../.env.example`](../.env.example) | cần biến nào để chạy được dự án này? | 🟢 đủ — một biến, chỉ dùng lúc build để depl… | code đọc một biến mới (process.env.X / os.getenv / os.Gete… |
+| [`decisions/`](decisions/README.md) | Tại sao lại làm thế này? | 19 ADR | mỗi quyết định kỹ thuật |
+| [`../.env.example`](../.env.example) | cần biến nào để chạy được dự án này? | 🟢 đủ — sáu biến NEXT_PUBLIC_*, đều tuỳ chọn… | code đọc một biến mới (process.env.X / os.getenv / os.Gete… |
 <!-- END:auto -->
 
 🔴 chưa điền · 🟡 một phần · 🟢 đủ · ⚪ chưa áp dụng
