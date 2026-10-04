@@ -4,6 +4,7 @@ import {
   consumeCallback,
   resetCaptureForTests,
   resetStartingForTests,
+  settleCallbackUrl,
   startLogin,
 } from './duckerAuth'
 
@@ -80,6 +81,40 @@ describe('captureCallback', () => {
   })
 })
 
+describe('settleCallbackUrl', () => {
+  beforeEach(() => {
+    sessionStorage.clear()
+    resetCaptureForTests()
+  })
+
+  it('restores the clean URL when it was re-polluted after capture', () => {
+    pend('s1', '/?level=3')
+    window.history.replaceState(null, '', '/?code=c1&state=s1')
+    captureCallback()
+    window.history.replaceState(null, '', '/?code=c1&state=s1')
+    settleCallbackUrl()
+    expect(window.location.search).toBe('?level=3')
+  })
+
+  it('is a no-op when there was no callback', () => {
+    window.history.replaceState(null, '', '/?level=5')
+    captureCallback()
+    window.history.replaceState(null, '', '/?other=1')
+    settleCallbackUrl()
+    expect(window.location.search).toBe('?other=1')
+  })
+
+  it('is one-shot: a second call does not rewrite a URL that changed meanwhile', () => {
+    pend('s1', '/?level=3')
+    window.history.replaceState(null, '', '/?code=c1&state=s1')
+    captureCallback()
+    settleCallbackUrl()
+    window.history.replaceState(null, '', '/?level=9')
+    settleCallbackUrl()
+    expect(window.location.search).toBe('?level=9')
+  })
+})
+
 describe('startLogin', () => {
   const assign = vi.fn()
   beforeEach(() => {
@@ -124,6 +159,16 @@ describe('startLogin', () => {
     await startLogin(config)
     expect(assign).not.toHaveBeenCalled()
     vi.stubGlobal('sessionStorage', real)
+    await startLogin(config)
+    expect(assign).toHaveBeenCalledTimes(1)
+  })
+
+  it('removes the pending entry and re-arms when the challenge cannot be computed', async () => {
+    const digest = vi.spyOn(crypto.subtle, 'digest').mockRejectedValueOnce(new Error('no crypto'))
+    await expect(startLogin(config)).rejects.toThrow('no crypto')
+    expect(sessionStorage.getItem('ducker.pkce')).toBeNull()
+    expect(assign).not.toHaveBeenCalled()
+    digest.mockRestore()
     await startLogin(config)
     expect(assign).toHaveBeenCalledTimes(1)
   })

@@ -70,6 +70,7 @@ export async function startLogin(config: DuckerConfig): Promise<void> {
     url.searchParams.set('code_challenge_method', 'S256')
     window.location.assign(url.toString())
   } catch (error) {
+    clearPending() // đã ghi entry mà không đi được thì đừng để lại verifier mồ côi
     starting = false
     throw error
   }
@@ -77,7 +78,9 @@ export async function startLogin(config: DuckerConfig): Promise<void> {
 
 /** Chỉ cho phép đường dẫn cùng origin vào replaceState ("//evil" sẽ ném lỗi lúc nạp; "/\evil" bị trình duyệt đọc thành "//evil"). */
 function isSafeReturnTo(value: unknown): value is string {
-  return typeof value === 'string' && value.startsWith('/') && !value.startsWith('//') && !value.includes('\\')
+  return (
+    typeof value === 'string' && value.startsWith('/') && !value.startsWith('//') && !value.includes('\\')
+  )
 }
 
 /**
@@ -112,6 +115,10 @@ export function consumeCallback(): CallbackResult | null {
 
 let captured: CallbackResult | null = null
 let didCapture = false
+/** URL sạch sau khi capture (pathname + search + hash); null khi không có callback hoặc đã settle. */
+let settledUrl: string | null = null
+
+const currentUrl = () => window.location.pathname + window.location.search + window.location.hash
 
 /** Chạy một lần khi module nạp trên trình duyệt, trước mọi code game đọc URL. */
 export function captureCallback(): void {
@@ -125,6 +132,24 @@ export function captureCallback(): void {
       // returnTo hỏng thì thôi, đừng để nó làm trắng game lúc nạp
     }
   }
+  if (captured) settledUrl = currentUrl()
+}
+
+/**
+ * Sau hydrate, app router của Next ghi lại URL lúc hydrate (còn ?code&state) vào history,
+ * làm hỏng bước dọn ở captureCallback — F5 sau đó sẽ gửi lại code đã dùng. Gọi MỘT lần
+ * lúc mount để đặt lại URL sạch. Một lần thôi: remount về sau (điều hướng đi rồi quay lại)
+ * không được ghi đè URL bằng giá trị cũ sau lưng Next.
+ */
+export function settleCallbackUrl(): void {
+  const url = settledUrl
+  settledUrl = null
+  if (url === null || url === currentUrl()) return
+  try {
+    window.history.replaceState(window.history.state, '', url)
+  } catch {
+    // không đặt lại được thì thôi, URL bẩn không làm hỏng game
+  }
 }
 
 export function capturedCallback(): CallbackResult | null {
@@ -135,6 +160,7 @@ export function capturedCallback(): CallbackResult | null {
 export function resetCaptureForTests(): void {
   captured = null
   didCapture = false
+  settledUrl = null
 }
 
 // Cờ tắt ⇒ không đọc location.search, không chạm storage.
