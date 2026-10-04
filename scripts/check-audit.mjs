@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync } from 'node:fs'
 
 /**
  * Enforces NFR-SEC-02 - "no vulnerability at high or above" - exactly as written.
@@ -25,93 +25,92 @@ import { readFileSync } from "node:fs";
  * `dependencies` and leaves `devDependencies` at 0, so the sanity check below
  * reads the total and never the dev split.
  */
-const BLOCKING = new Set(["high", "critical"]);
+const BLOCKING = new Set(['high', 'critical'])
 
-let raw = "";
-process.stdin.setEncoding("utf8");
-for await (const chunk of process.stdin) raw += chunk;
+let raw = ''
+process.stdin.setEncoding('utf8')
+for await (const chunk of process.stdin) raw += chunk
 
-let report;
+let report
 try {
-  report = JSON.parse(raw);
+  report = JSON.parse(raw)
 } catch {
-  console.error("NFR-SEC-02 could not be checked - `pnpm audit --json` produced no JSON.");
-  console.error("");
-  console.error("What arrived on stdin, first 400 characters:");
-  console.error(raw.slice(0, 400) || "  (nothing at all)");
-  process.exit(1);
+  console.error('NFR-SEC-02 could not be checked - `pnpm audit --json` produced no JSON.')
+  console.error('')
+  console.error('What arrived on stdin, first 400 characters:')
+  console.error(raw.slice(0, 400) || '  (nothing at all)')
+  process.exit(1)
 }
 
-const metadata = report.metadata ?? null;
-const counts = metadata?.vulnerabilities ?? {};
+const metadata = report.metadata ?? null
+const counts = metadata?.vulnerabilities ?? {}
 const advisories = Object.values(report.advisories ?? {}).map((a) => ({
   severity: a.severity,
   module: a.module_name,
   vulnerable: a.vulnerable_versions,
   patched: a.patched_versions,
   title: a.title,
-  path: a.findings?.[0]?.paths?.[0] ?? "",
-}));
+  path: a.findings?.[0]?.paths?.[0] ?? '',
+}))
 
 // Sanity check BEFORE reporting anything. "No advisories" is only evidence of a
 // clean tree if the audit actually looked at the tree.
-const scanned = metadata?.totalDependencies ?? metadata?.dependencies ?? 0;
+const scanned = metadata?.totalDependencies ?? metadata?.dependencies ?? 0
 const declaredDev = Object.keys(
-  JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")).devDependencies ??
-    {},
-).length;
+  JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).devDependencies ?? {},
+).length
 
-const reasons = [];
-if (!metadata) reasons.push("the report carried no `metadata` block at all");
-if (scanned === 0) reasons.push("the report counted 0 dependencies scanned");
+const reasons = []
+if (!metadata) reasons.push('the report carried no `metadata` block at all')
+if (scanned === 0) reasons.push('the report counted 0 dependencies scanned')
 if (declaredDev > 0 && scanned < declaredDev) {
   reasons.push(
     `only ${scanned} dependencies were scanned while package.json alone declares ${declaredDev} devDependencies`,
-  );
+  )
 }
 // The two halves of the report have to agree with each other. A severity count
 // with no advisory behind it means one of them is lying, and a gate cannot pick.
-const countedBlocking = [...BLOCKING].reduce((n, s) => n + (counts[s] ?? 0), 0);
-const listedBlocking = advisories.filter((a) => BLOCKING.has(a.severity));
+const countedBlocking = [...BLOCKING].reduce((n, s) => n + (counts[s] ?? 0), 0)
+const listedBlocking = advisories.filter((a) => BLOCKING.has(a.severity))
 if (countedBlocking > 0 && listedBlocking.length === 0) {
   reasons.push(
     `metadata counts ${countedBlocking} high/critical vulnerability(ies) but no advisory was listed`,
-  );
+  )
 }
 
 if (reasons.length > 0) {
-  console.error("NFR-SEC-02 could not be checked - the audit did not really run.");
-  console.error("");
-  for (const reason of reasons) console.error(`  - ${reason}`);
-  console.error("");
-  console.error("Treat this as UNKNOWN, not clean. Pull requests are covered separately by the");
-  console.error("dependency-review job in ci.yml, which reads GitHub's advisory database and");
-  console.error("does not depend on a registry endpoint answering.");
-  process.exit(1);
+  console.error('NFR-SEC-02 could not be checked - the audit did not really run.')
+  console.error('')
+  for (const reason of reasons) console.error(`  - ${reason}`)
+  console.error('')
+  console.error('Treat this as UNKNOWN, not clean. Pull requests are covered separately by the')
+  console.error("dependency-review job in ci.yml, which reads GitHub's advisory database and")
+  console.error('does not depend on a registry endpoint answering.')
+  process.exit(1)
 }
 
-const rest = advisories.filter((a) => !BLOCKING.has(a.severity));
+const rest = advisories.filter((a) => !BLOCKING.has(a.severity))
 
 if (rest.length > 0) {
-  console.log(`${rest.length} advisory(ies) below high, not blocking:`);
-  for (const a of rest) console.log(`  ${a.severity.padEnd(8)} ${a.module}  ${a.title}`);
-  console.log("");
+  console.log(`${rest.length} advisory(ies) below high, not blocking:`)
+  for (const a of rest) console.log(`  ${a.severity.padEnd(8)} ${a.module}  ${a.title}`)
+  console.log('')
 }
 
 if (listedBlocking.length === 0) {
   console.log(
     `NFR-SEC-02: no high or critical advisory (${advisories.length} total, ` +
       `${scanned} dependencies scanned).`,
-  );
-  process.exit(0);
+  )
+  process.exit(0)
 }
 
-console.error(`NFR-SEC-02 violated: ${listedBlocking.length} advisory(ies) at high or above\n`);
+console.error(`NFR-SEC-02 violated: ${listedBlocking.length} advisory(ies) at high or above\n`)
 for (const a of listedBlocking) {
-  console.error(`  ${a.severity.toUpperCase()}  ${a.module} ${a.vulnerable}`);
-  console.error(`    ${a.title}`);
-  console.error(`    via ${a.path}`);
-  console.error(`    fixed in ${a.patched}\n`);
+  console.error(`  ${a.severity.toUpperCase()}  ${a.module} ${a.vulnerable}`)
+  console.error(`    ${a.title}`)
+  console.error(`    via ${a.path}`)
+  console.error(`    fixed in ${a.patched}\n`)
 }
-console.error("Fix it, or pin the patched range through `pnpm.overrides` in package.json.");
-process.exit(1);
+console.error('Fix it, or pin the patched range through `pnpm.overrides` in package.json.')
+process.exit(1)

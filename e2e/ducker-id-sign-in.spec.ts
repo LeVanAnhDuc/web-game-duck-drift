@@ -116,3 +116,63 @@ test('nút đăng nhập đủ 44px và không đè lên nút/chữ bên cạnh'
     expect(overlaps).toBe(false)
   }
 })
+
+type Box = { x: number; y: number; width: number; height: number }
+
+const inside = (box: Box, page: Page) => {
+  const size = page.viewportSize()!
+  return box.x >= 0 && box.y >= 0 && box.x + box.width <= size.width && box.y + box.height <= size.height
+}
+
+test('mở menu tài khoản: không đẩy bố cục, menu nằm trọn trong khung nhìn', async ({ page }) => {
+  await page.goto('/')
+  await signInWhenReady(page)
+  const trigger = page.getByRole('button', { name: vi.account.menuLabel })
+  const container = trigger.locator('xpath=..')
+  const before = (await container.boundingBox())!
+  const screenBefore = (await page.getByRole('button', { name: 'Chơi', exact: true }).boundingBox())!
+
+  await trigger.click()
+  const menu = page.getByRole('menu')
+  await expect(menu).toBeVisible()
+  // Kiểm position tính toán, không chỉ danh sách class: `.panel { position: relative }` từng thắng `absolute`.
+  expect(await menu.evaluate((el) => getComputedStyle(el).position)).toBe('absolute')
+  const after = (await container.boundingBox())!
+  const screenAfter = (await page.getByRole('button', { name: 'Chơi', exact: true }).boundingBox())!
+  expect(after).toEqual(before)
+  expect(screenAfter).toEqual(screenBefore)
+  const box = (await menu.boundingBox())!
+  expect(inside(box, page)).toBe(true)
+  console.log(
+    `MEASURED ${JSON.stringify(page.viewportSize())} container=${JSON.stringify(before)} menu=${JSON.stringify(box)}`,
+  )
+})
+
+test('cột menu: 375x667 không cuộn; ngang 667x375 cuộn được, không cắt tiêu đề và với tới nút tài khoản', async ({
+  page,
+}) => {
+  for (const size of [
+    { width: 375, height: 667 },
+    { width: 667, height: 375 },
+  ]) {
+    await page.setViewportSize(size)
+    await page.goto('/')
+    await signInWhenReady(page)
+    const main = page.locator('main')
+    const title = (await page.getByRole('heading', { name: 'DUCK DRIFT', exact: true }).boundingBox())!
+    const overflow = await main.evaluate((el) => {
+      const column = el.querySelector('h1')!.parentElement!
+      return column.scrollHeight - column.clientHeight
+    })
+    console.log(`MEASURED column ${size.width}x${size.height} title.y=${title.y} column overflow=${overflow}`)
+    // Tiêu đề không bao giờ bị cắt ở phía trên (trước đây -51.75 ở 667x375).
+    expect(title.y).toBeGreaterThanOrEqual(0)
+    if (size.height >= 600) expect(overflow).toBeLessThanOrEqual(0)
+
+    const account = page.getByRole('button', { name: vi.account.menuLabel })
+    await account.scrollIntoViewIfNeeded()
+    const box = (await account.boundingBox())!
+    console.log(`MEASURED account after scroll ${JSON.stringify(box)}`)
+    expect(inside(box, page)).toBe(true)
+  }
+})

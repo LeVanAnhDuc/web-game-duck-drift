@@ -36,10 +36,30 @@ describe('AccountButton', () => {
     expect(base.signIn).toHaveBeenCalledOnce()
   })
 
-  it('shows the sign-in button before the client has started (idle)', () => {
+  it('renders a disabled same-label button while idle, so nothing is clickable before hydration', () => {
     auth.value = { ...base, status: 'idle', profile: null }
     render(<AccountButton />)
-    expect(screen.getByRole('button', { name: 'Đăng nhập' })).toBeTruthy()
+    const button = screen.getByRole('button', { name: 'Đăng nhập' }) as HTMLButtonElement
+    expect(button.disabled).toBe(true)
+    fireEvent.click(button)
+    expect(base.signIn).not.toHaveBeenCalled()
+  })
+
+  it('falls back to the initial when the picture fails, and sends no referrer', () => {
+    auth.value = { ...signedIn, profile: { ...user, picture: 'http://x.test/a.png' } }
+    const { container } = render(<AccountButton />)
+    const img = container.querySelector('img')!
+    expect(img.getAttribute('referrerpolicy')).toBe('no-referrer')
+    fireEvent.error(img)
+    expect(container.querySelector('img')).toBeNull()
+    expect(screen.getByRole('button', { name: strings.account.menuLabel }).textContent).toBe('L')
+  })
+
+  it('keeps the identity block out of the menu items', () => {
+    auth.value = signedIn
+    render(<AccountButton />)
+    openMenu()
+    expect(screen.getByText('Lê Văn Anh Đức').parentElement!.getAttribute('role')).toBe('none')
   })
 
   it('disables the button while signing in', () => {

@@ -9,7 +9,7 @@ import type { NextConfig } from 'next'
  */
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || undefined
 
-// Chỉ e2e (scripts/build-e2e-auth.mjs): export bản bật đăng nhập ra `out-auth/` để không đè `out/`.
+// Chỉ e2e (scripts/build-e2e.mjs): export bản bật đăng nhập ra `out-auth/` để không đè `out/`.
 const distDir = process.env.E2E_AUTH_BUILD === 'true' ? 'out-auth' : undefined
 
 const nextConfig: NextConfig = {

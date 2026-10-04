@@ -18,7 +18,7 @@ Phần dùng chung của cả 11 game (hành vi, cấu hình, test, rollout) n�
 
 ## 3. Tệp
 
-`src/auth/{types,config,pkce,duckerAuth,requests,duckerSession}.ts` (+test), `src/lib/initials.ts`, `src/hooks/{useDuckerAuth,useAccountMenu}.ts`, `src/views/Home/components/AccountButton/`, `src/env.d.ts`, `scripts/build-e2e-auth.mjs`, `e2e/ducker-id-*.spec.ts`.
+`src/auth/{types,config,pkce,duckerAuth,requests,duckerSession}.ts` (+test), `src/lib/initials.ts`, `src/hooks/{useDuckerAuth,useAccountMenu}.ts`, `src/views/Home/components/AccountButton/`, `src/env.d.ts`, `scripts/build-e2e.mjs`, `e2e/ducker-id-*.spec.ts`.
 
 `src/types/` bị R-14 bác nên kiểu nằm cạnh module (`src/auth/types.ts`). `AccountButton` chỉ dùng ở một view nên nằm ở `views/Home/components/` (R-03), không phải `src/components/`.
 

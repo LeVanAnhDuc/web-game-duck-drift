@@ -35,7 +35,9 @@ export function MenuScreen({
   onCustom: () => void
 }) {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-8 px-6">
+    // Căn giữa bằng margin auto ở hai đầu thay cho `justify-center`: khi cột cao hơn màn hình (ngang 667x375
+    // với hàng đăng nhập) nó cuộn được từ đầu thay vì cắt mất tiêu đề phía trên. Vừa màn hình thì y hệt cũ.
+    <div className="flex h-full flex-col items-center gap-8 overflow-y-auto px-6 [&>:first-child]:mt-auto [&>:last-child]:mb-auto">
       <ScreenTitle>{vi.menu.title}</ScreenTitle>
 
       <div className="flex w-full max-w-xs flex-col gap-3">
@@ -65,9 +67,7 @@ export function MenuScreen({
         <p className="text-[11px] tracking-wide text-muted">{vi.menu.localNote}</p>
         {/* Đăng nhập Ducker ID tuỳ chọn (ADR-0021): chỉ định danh, không đồng bộ gì cả.
             Cờ tắt thì AccountButton không render gì và cột này y hệt trước đây. */}
-        <div className="mt-2 flex justify-center">
-          <AccountButton />
-        </div>
+        <AccountButton />
       </div>
     </div>
   )

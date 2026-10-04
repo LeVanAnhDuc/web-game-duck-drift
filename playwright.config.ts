@@ -4,7 +4,7 @@ import { defineConfig, devices } from '@playwright/test'
 // 3000/5000 của Ducker ID) để không bắt nhầm server của repo game khác chạy song song.
 const PORT = 4311
 const BASE_URL = `http://127.0.0.1:${PORT}`
-// Bản build BẬT đăng nhập (issuer giả) — scripts/build-e2e-auth.mjs, xuất ra out-auth/.
+// Bản build BẬT đăng nhập (issuer giả) — scripts/build-e2e.mjs, xuất ra out-auth/.
 const AUTH_PORT = 4312
 const AUTH_URL = `http://127.0.0.1:${AUTH_PORT}`
 const AUTH_SPEC = /ducker-id-sign-in\.spec\.ts/
@@ -60,6 +60,11 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], baseURL: AUTH_URL, viewport: { width: 375, height: 720 } },
     },
     {
+      name: 'auth-320',
+      testMatch: AUTH_SPEC,
+      use: { ...devices['Desktop Chrome'], baseURL: AUTH_URL, viewport: { width: 320, height: 640 } },
+    },
+    {
       name: 'auth-1440',
       testMatch: AUTH_SPEC,
       use: { ...devices['Desktop Chrome'], baseURL: AUTH_URL, viewport: { width: 1440, height: 900 } },
@@ -67,15 +72,16 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: `node scripts/serve.mjs ${PORT} out`,
+      command: `node scripts/build-e2e.mjs off && node scripts/serve.mjs ${PORT} out`,
       url: BASE_URL,
       reuseExistingServer: !process.env.CI,
-      timeout: 60_000,
+      timeout: 600_000,
     },
     {
-      command: `node scripts/build-e2e-auth.mjs && node scripts/serve.mjs ${AUTH_PORT} out-auth`,
+      command: `node scripts/build-e2e.mjs auth && node scripts/serve.mjs ${AUTH_PORT} out-auth`,
       url: AUTH_URL,
-      reuseExistingServer: !process.env.CI,
+      // Luôn dựng lại: một server cũ có thể đang phục vụ bản build với cấu hình khác.
+      reuseExistingServer: false,
       timeout: 600_000,
     },
   ],
