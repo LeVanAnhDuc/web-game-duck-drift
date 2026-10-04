@@ -6,6 +6,7 @@ import { Button } from '@/components/Button'
 import { ScreenTitle } from '@/components/ScreenTitle'
 import { Segmented } from '@/components/Segmented'
 import { formatScore } from '@/lib/format'
+import { AccountButton } from '../../components/AccountButton'
 
 /** Mức có bảng điểm riêng. `custom` không nằm đây — nó là NÚT, không phải lựa chọn. */
 export type PresetId = Exclude<DifficultyId, 'custom'>
@@ -62,6 +63,11 @@ export function MenuScreen({
         </p>
         {/* Kỳ vọng chỉnh ở menu, TRƯỚC cú bấm "Bảng điểm" — F-08 · ADR-0020. */}
         <p className="text-[11px] tracking-wide text-muted">{vi.menu.localNote}</p>
+        {/* Đăng nhập Ducker ID tuỳ chọn (ADR-0021): chỉ định danh, không đồng bộ gì cả.
+            Cờ tắt thì AccountButton không render gì và cột này y hệt trước đây. */}
+        <div className="mt-2 flex justify-center">
+          <AccountButton />
+        </div>
       </div>
     </div>
   )

@@ -31,6 +31,15 @@ export const vi = {
     localNote: 'Điểm chỉ lưu trên máy này',
   },
 
+  /** Đăng nhập Ducker ID tuỳ chọn — ADR-0021. Chỉ hiện khi cờ tính năng bật. */
+  account: {
+    signIn: 'Đăng nhập',
+    signingIn: 'Đang đăng nhập…',
+    menuLabel: 'Tài khoản Ducker ID',
+    openProfile: 'Mở hồ sơ Ducker ID',
+    signOut: 'Đăng xuất',
+  },
+
   difficulty: {
     label: 'Độ khó',
     easy: 'Dễ',
