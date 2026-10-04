@@ -13,3 +13,9 @@ test('cờ tắt: không có nút đăng nhập và không có request ra ngoài
   expect(await page.evaluate(() => sessionStorage.length)).toBe(0)
   expect(outside).toEqual([])
 })
+
+test('cờ tắt: cột menu giữ đúng class như bản trước khi có đăng nhập', async ({ page }) => {
+  await page.goto('/')
+  const column = page.getByRole('heading', { name: 'DUCK DRIFT', exact: true }).locator('xpath=..')
+  await expect(column).toHaveAttribute('class', 'flex h-full flex-col items-center justify-center gap-8 px-6')
+})

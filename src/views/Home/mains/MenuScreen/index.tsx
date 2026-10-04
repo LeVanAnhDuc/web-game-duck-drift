@@ -1,6 +1,7 @@
 'use client'
 
 import type { DifficultyId } from '@/game/core/types'
+import { DUCKER_CONFIG } from '@/auth/config'
 import { vi } from '@/i18n/vi'
 import { Button } from '@/components/Button'
 import { ScreenTitle } from '@/components/ScreenTitle'
@@ -16,6 +17,16 @@ export const PRESETS: readonly { id: PresetId; label: string }[] = [
   { id: 'normal', label: vi.difficulty.normal },
   { id: 'hard', label: vi.difficulty.hard },
 ]
+
+/** Bản deploy (cờ tắt): đúng class cũ, không đổi một chữ. */
+const COLUMN_CLASSES = 'flex h-full flex-col items-center justify-center gap-8 px-6'
+/**
+ * Cờ bật: thêm hàng đăng nhập nên cột có thể cao hơn màn hình ngang 667x375. Căn giữa bằng
+ * margin auto thay cho `justify-center` để nó cuộn được từ đầu thay vì cắt mất tiêu đề.
+ */
+const COLUMN_CLASSES_WITH_ACCOUNT =
+  'flex h-full flex-col items-center gap-8 overflow-y-auto px-6 [&>:first-child]:mt-auto [&>:last-child]:mb-auto'
+const COLUMN = DUCKER_CONFIG ? COLUMN_CLASSES_WITH_ACCOUNT : COLUMN_CLASSES
 
 export function MenuScreen({
   best,
@@ -35,9 +46,7 @@ export function MenuScreen({
   onCustom: () => void
 }) {
   return (
-    // Căn giữa bằng margin auto ở hai đầu thay cho `justify-center`: khi cột cao hơn màn hình (ngang 667x375
-    // với hàng đăng nhập) nó cuộn được từ đầu thay vì cắt mất tiêu đề phía trên. Vừa màn hình thì y hệt cũ.
-    <div className="flex h-full flex-col items-center gap-8 overflow-y-auto px-6 [&>:first-child]:mt-auto [&>:last-child]:mb-auto">
+    <div className={COLUMN}>
       <ScreenTitle>{vi.menu.title}</ScreenTitle>
 
       <div className="flex w-full max-w-xs flex-col gap-3">
