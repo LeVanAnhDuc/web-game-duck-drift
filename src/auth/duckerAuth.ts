@@ -75,9 +75,9 @@ export async function startLogin(config: DuckerConfig): Promise<void> {
   }
 }
 
-/** Chỉ cho phép đường dẫn cùng origin vào replaceState ("//evil" sẽ ném lỗi lúc nạp). */
+/** Chỉ cho phép đường dẫn cùng origin vào replaceState ("//evil" sẽ ném lỗi lúc nạp; "/\evil" bị trình duyệt đọc thành "//evil"). */
 function isSafeReturnTo(value: unknown): value is string {
-  return typeof value === 'string' && value.startsWith('/') && !value.startsWith('//')
+  return typeof value === 'string' && value.startsWith('/') && !value.startsWith('//') && !value.includes('\\')
 }
 
 /**

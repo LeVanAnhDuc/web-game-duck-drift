@@ -53,11 +53,14 @@ describe('consumeCallback', () => {
     expect(window.location.search).toBe('')
   })
 
-  it('drops an unsafe returnTo', () => {
-    pend('s1', '//evil.example/x')
-    window.history.replaceState(null, '', '/?code=c1&state=s1')
-    expect(consumeCallback()).toEqual({ code: 'c1', verifier: 'v1', returnTo: undefined })
-  })
+  it.each(['//evil.example/x', '/\\evil', '/a\\b', 'https://evil.example'])(
+    'drops an unsafe returnTo %s',
+    (returnTo) => {
+      pend('s1', returnTo)
+      window.history.replaceState(null, '', '/?code=c1&state=s1')
+      expect(consumeCallback()).toEqual({ code: 'c1', verifier: 'v1', returnTo: undefined })
+    },
+  )
 })
 
 describe('captureCallback', () => {

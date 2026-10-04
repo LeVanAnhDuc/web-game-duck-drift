@@ -58,6 +58,28 @@ describe('requests', () => {
     expect(init.signal).toBeInstanceOf(AbortSignal)
   })
 
+  it.each([
+    null,
+    'x',
+    [],
+    { sub: '' },
+    { sub: 1 },
+    { sub: 'u', name: 5 },
+    { sub: 'u', email: {} },
+    { sub: 'u', picture: 3 },
+    { sub: 'u', email_verified: 'yes' },
+  ])('rejects a malformed userinfo body %o', async (body) => {
+    fetchMock.mockResolvedValue(json(body))
+    await expect(fetchProfile(config, 'at-1')).rejects.toThrow('userinfo_invalid')
+  })
+
+  it('accepts a minimal profile and null optional fields', async () => {
+    fetchMock.mockResolvedValue(json({ sub: 'u1' }))
+    await expect(fetchProfile(config, 'at-1')).resolves.toEqual({ sub: 'u1' })
+    fetchMock.mockResolvedValue(json({ sub: 'u1', name: null, picture: null, email_verified: true }))
+    await expect(fetchProfile(config, 'at-1')).resolves.toMatchObject({ sub: 'u1' })
+  })
+
   it('throws on a non-ok userinfo response', async () => {
     fetchMock.mockResolvedValue(json({}, 401))
     await expect(fetchProfile(config, 'at-1')).rejects.toThrow('userinfo_failed_401')

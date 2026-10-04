@@ -30,11 +30,30 @@ export async function exchangeCode(
   return { accessToken: data.access_token }
 }
 
+const isOptionalString = (value: unknown) =>
+  value === undefined || value === null || typeof value === 'string'
+
+/** userinfo hỏng không được làm sập render: sai hình dạng thì coi như đăng nhập thất bại. */
+function isProfile(data: unknown): data is DuckerProfile {
+  if (typeof data !== 'object' || data === null) return false
+  const profile = data as Record<string, unknown>
+  return (
+    typeof profile.sub === 'string' &&
+    profile.sub !== '' &&
+    isOptionalString(profile.name) &&
+    isOptionalString(profile.email) &&
+    isOptionalString(profile.picture) &&
+    (profile.email_verified === undefined || typeof profile.email_verified === 'boolean')
+  )
+}
+
 export async function fetchProfile(config: DuckerConfig, accessToken: string): Promise<DuckerProfile> {
   const response = await fetch(new URL('/oauth/userinfo', config.issuer), {
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     headers: { Authorization: `Bearer ${accessToken}` },
   })
   if (!response.ok) throw new Error(`userinfo_failed_${response.status}`)
-  return (await response.json()) as DuckerProfile
+  const data: unknown = await response.json()
+  if (!isProfile(data)) throw new Error('userinfo_invalid')
+  return data
 }
