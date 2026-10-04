@@ -98,6 +98,26 @@ describe('AccountButton', () => {
     expect(document.activeElement).toBe(out)
   })
 
+  it('keeps menu keys away from the game while open, and gives them back once closed', () => {
+    auth.value = signedIn
+    render(<AccountButton />)
+    const seen: string[] = []
+    const gameListener = (event: KeyboardEvent) => seen.push(event.key)
+    window.addEventListener('keydown', gameListener)
+    const trigger = openMenu()
+    fireEvent.keyDown(screen.getByRole('menu'), { key: 'ArrowUp' })
+    fireEvent.keyDown(screen.getByRole('menu'), { key: 'ArrowDown' })
+    fireEvent.keyDown(screen.getByRole('menu'), { key: 'Home' })
+    fireEvent.keyDown(screen.getByRole('menu'), { key: 'End' })
+    fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' })
+    expect(trigger.getAttribute('aria-expanded')).toBe('false')
+    expect(seen).toEqual([])
+    fireEvent.keyDown(document.body, { key: 'ArrowUp' })
+    fireEvent.keyDown(document.body, { key: 'Escape' })
+    expect(seen).toEqual(['ArrowUp', 'Escape'])
+    window.removeEventListener('keydown', gameListener)
+  })
+
   it('Tab closes the menu without pulling focus back to the trigger', () => {
     auth.value = signedIn
     render(<AccountButton />)

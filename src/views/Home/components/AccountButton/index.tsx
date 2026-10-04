@@ -100,7 +100,6 @@ export function AccountButton() {
           ref={menu.menuRef}
           role="menu"
           aria-label={vi.account.menuLabel}
-          onKeyDown={menu.onMenuKeyDown}
           className="panel absolute bottom-full left-1/2 z-10 mb-2 flex w-64 -translate-x-1/2 flex-col gap-1 p-2 shadow-glow-sm"
         >
           <div className="px-3 py-2">
