@@ -8,6 +8,7 @@
 /node_modules/
 /.next/
 /out/
+/out-auth/
 next-env.d.ts
 *.tsbuildinfo
 npm-debug.log*
