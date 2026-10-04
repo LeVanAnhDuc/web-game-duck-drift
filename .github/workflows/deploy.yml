@@ -45,7 +45,9 @@ jobs:
         env:
           # Chỉ đặt ở đây. Nó bật basePath cho đường dẫn con /web-game-duck-drift;
           # `pnpm dev` và build ở máy vẫn chạy ở gốc.
-          GITHUB_PAGES: 'true'
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+          # Ducker ID sign-in is shipped dark: the flag and DUCKER_* vars are
+          # deliberately not passed (ADR-0021).
 
       # KHÔNG dùng `enablement: true`: đã thử và nó đỏ với "Resource not
       # accessible by integration". `GITHUB_TOKEN` có `pages: write` nên deploy
