@@ -8,6 +8,7 @@
 /node_modules/
 /.next/
 /out/
+/out-auth/
 next-env.d.ts
 *.tsbuildinfo
 npm-debug.log*
@@ -34,3 +35,6 @@ RELEASE_NOTES.md
 
 # Playwright MCP scratch
 /.playwright-mcp/
+
+# Git worktrees cuc bo (feature-flow)
+/.worktrees/

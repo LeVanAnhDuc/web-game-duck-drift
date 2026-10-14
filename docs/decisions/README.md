@@ -26,6 +26,7 @@
 | [ADR-0018](0018-ship-reads-first-and-controls-hint.md) | Tàu là nét nặng nhất trên canvas, và gợi ý điều khiển là DOM suy từ HUD | 2026-09-11 | accepted |
 | [ADR-0019](0019-consequences-announced-before-the-click.md) | Hậu quả phá huỷ nói trước cú bấm, và nhãn phải nhìn thấy được | 2026-09-11 | accepted |
 | [ADR-0020](0020-set-leaderboard-expectations-at-the-menu.md) | Chỉnh kỳ vọng về bảng điểm ngay ở menu, và trạng thái chọn không mã hoá chỉ bằng màu | 2026-09-11 | accepted |
+| [ADR-0021](0021-ducker-id-sign-in.md) | Đăng nhập Ducker ID tuỳ chọn, nằm sau cờ tính năng, chưa bật ở bản deploy | 2026-10-04 | accepted |
 <!-- END:auto -->
 
 Trạng thái: `accepted` · `superseded by ADR-00xx` · `deprecated`

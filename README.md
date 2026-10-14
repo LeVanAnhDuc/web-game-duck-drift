@@ -4,7 +4,7 @@
 [![Deploy](https://github.com/LeVanAnhDuc/web-game-duck-drift/actions/workflows/deploy.yml/badge.svg)](https://github.com/LeVanAnhDuc/web-game-duck-drift/actions/workflows/deploy.yml)
 [![Release](https://img.shields.io/github/v/release/LeVanAnhDuc/web-game-duck-drift?sort=semver)](https://github.com/LeVanAnhDuc/web-game-duck-drift/releases)
 
-An Asteroids clone built with Next.js and Canvas 2D. No account, no server, no
+An Asteroids clone built with Next.js and Canvas 2D. No game accounts, no server, no
 analytics: it exports to static HTML and the whole game runs on the player's machine.
 Scores live in `localStorage`.
 
@@ -24,6 +24,7 @@ Part of the `web-game/` folder in the `web-app-ecosystem` workspace.
 - Keyboard controls on desktop and real hold-to-act touch controls on phones and tablets.
 - Three difficulty presets — easy, normal, hard — chosen on the menu, plus a custom mode with four sliders for lives, asteroid speed, power-up drop rate and the wave UFOs start on.
 - Local top-10 high scores with arcade-style three-letter initials, kept in the browser, one table per difficulty.
+- Optional sign-in with Ducker ID — identity only, no sync (behind a feature flag, off in the deployed build).
 - Respects `prefers-reduced-motion`, announces game events to screen readers, and encodes every power-up with a shape as well as a colour.
 
 ## Controls
@@ -55,6 +56,9 @@ pnpm build        # writes out/
 `pnpm test:e2e` needs a build first (`pnpm build`) and a Chromium install
 (`pnpm exec playwright install chromium`). No environment variables are needed to
 run locally — see [`.env.example`](.env.example).
+To try the Ducker ID sign-in locally, copy `.env.example` to `.env`, set
+`NEXT_PUBLIC_DUCKER_CLIENT_ID`, and register `http://localhost:<port>/` as a redirect
+URI (the `.env.example` comments list the CORS origin to add as well).
 
 Two checks enforce thresholds that would otherwise only be written down:
 
@@ -103,7 +107,7 @@ emit, so a score that did not change costs no render.
 | Workflow                                       | When                                  | What it does                                                                                                                                                                                                                                                       |
 | ---------------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | [`ci.yml`](.github/workflows/ci.yml)           | every pull request and push to `main` | Parallel jobs: lint + typecheck + unit tests; and build + first-load-JS budget + the end-to-end suite at five configurations. A third job, dependency review, runs on pull requests only — the action compares base against head, so a push has nothing to compare |
-| [`deploy.yml`](.github/workflows/deploy.yml)   | push to `main`                        | Rebuilds with `GITHUB_PAGES=true` and publishes `out/` to Pages. It re-runs the tests rather than trusting a green run it cannot see                                                                                                                               |
+| [`deploy.yml`](.github/workflows/deploy.yml)   | push to `main`                        | Rebuilds with `NEXT_PUBLIC_BASE_PATH=/<repo>` (never the sign-in flag) and publishes `out/` to Pages. It re-runs the tests rather than trusting a green run it cannot see                                                                                                                               |
 | [`release.yml`](.github/workflows/release.yml) | push to `main`                        | Works out the next version, composes the notes, and publishes a GitHub release                                                                                                                                                                                     |
 
 The end-to-end suite runs against the **static export** — the artifact Pages actually

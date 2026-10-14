@@ -15,12 +15,12 @@ Ba dự án cùng thư mục `web-game/` (`minesweeper`, `gomoku`, `tetris`) đ�
 Ba workflow, theo đúng khuôn của `minesweeper`:
 
 - `ci.yml` — hai job **song song**: (1) lint, typecheck, unit test, `yarn audit` qua `scripts/check-audit.mjs`; (2) build, ngân sách JS lần tải đầu qua `scripts/check-bundle-size.mjs`, rồi e2e.
-- `deploy.yml` — push vào `main` thì build với `GITHUB_PAGES=true` và publish `out/`. Nó **chạy lại test** thay vì tin vào `ci.yml`.
+- `deploy.yml` — push vào `main` thì build với `NEXT_PUBLIC_BASE_PATH=/<tên-repo>` (trước ADR-0021 là `GITHUB_PAGES=true`) và publish `out/`. Nó **chạy lại test** thay vì tin vào `ci.yml`.
 - `release.yml` — xem ADR-0009.
 
 Playwright chạy trên **bản export tĩnh** qua `scripts/serve.mjs`, ở **năm cấu hình**: 375 / 768 / 1024 / 1440 và một Pixel 5 cảm ứng thật. Hai ngưỡng vốn chỉ nằm trên giấy giờ do script gate: `NFR-PERF-04` (bundle) và `NFR-SEC-02` (audit).
 
-`next.config.ts` bật lại `basePath`/`assetPrefix` theo `GITHUB_PAGES`, và `trailingSlash: true` vì Pages phục vụ `/foo/` chứ không phải `/foo`.
+`next.config.ts` bật lại `basePath`/`assetPrefix` theo `NEXT_PUBLIC_BASE_PATH` (trước ADR-0021: `GITHUB_PAGES`), và `trailingSlash: true` vì Pages phục vụ `/foo/` chứ không phải `/foo`.
 
 ## 3. Phương án đã loại
 

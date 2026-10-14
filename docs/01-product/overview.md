@@ -7,7 +7,7 @@
 
 ## 1. Một câu định vị
 
-Duck Drift là Asteroids bản web: game bắn thiên thạch kiểu arcade cổ điển, thêm hệ power-up, chơi được ngay trong trình duyệt bằng bàn phím hoặc bằng ngón tay, không cài đặt và không đăng nhập.
+Duck Drift là Asteroids bản web: game bắn thiên thạch kiểu arcade cổ điển, thêm hệ power-up, chơi được ngay trong trình duyệt bằng bàn phím hoặc bằng ngón tay, không cài đặt và không bắt buộc đăng nhập.
 
 ## 2. Vấn đề đang giải
 
@@ -19,7 +19,7 @@ Người muốn chơi vài phút trong trình duyệt, không muốn cài gì, k
 
 ## 4. Non-Goals — dứt khoát không làm
 
-- **Không có tài khoản, đăng nhập, hay đồng bộ giữa thiết bị.** Game phải chơi được trong 2 giây kể từ khi mở trang; mọi thứ chắn ở giữa đều đắt hơn giá trị nó mang lại.
+- **Không có tài khoản do game sở hữu, và không đồng bộ giữa thiết bị.** Game phải chơi được trong 2 giây kể từ khi mở trang; mọi thứ chắn ở giữa đều đắt hơn giá trị nó mang lại. Ngoại lệ duy nhất: đăng nhập Ducker ID **tuỳ chọn**, chỉ định danh, không backend, không đồng bộ, nằm sau cờ tính năng và chưa bật ở bản deploy (ADR-0021).
 - **Không có bảng xếp hạng online ở bản này.** Bảng điểm chung cần backend, database và chống gian lận điểm — gấp đôi khối lượng việc cho một thứ chưa chắc có người dùng. Tầng lưu điểm được đặt sau một interface để mở đường, nhưng phần online nằm ngoài phạm vi.
 - **Không có âm thanh ở bản đầu.** Âm thanh arcade rất dễ thành khó chịu, và nó thêm vào sau được mà không đụng gameplay.
 - **Không có nhiều người chơi, không có chế độ đối kháng.**

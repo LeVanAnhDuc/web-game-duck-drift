@@ -1,11 +1,13 @@
 'use client'
 
 import type { DifficultyId } from '@/game/core/types'
+import { DUCKER_CONFIG } from '@/auth/config'
 import { vi } from '@/i18n/vi'
 import { Button } from '@/components/Button'
 import { ScreenTitle } from '@/components/ScreenTitle'
 import { Segmented } from '@/components/Segmented'
 import { formatScore } from '@/lib/format'
+import { AccountButton } from '../../components/AccountButton'
 
 /** Mức có bảng điểm riêng. `custom` không nằm đây — nó là NÚT, không phải lựa chọn. */
 export type PresetId = Exclude<DifficultyId, 'custom'>
@@ -15,6 +17,16 @@ export const PRESETS: readonly { id: PresetId; label: string }[] = [
   { id: 'normal', label: vi.difficulty.normal },
   { id: 'hard', label: vi.difficulty.hard },
 ]
+
+/** Bản deploy (cờ tắt): đúng class cũ, không đổi một chữ. */
+const COLUMN_CLASSES = 'flex h-full flex-col items-center justify-center gap-8 px-6'
+/**
+ * Cờ bật: thêm hàng đăng nhập nên cột có thể cao hơn màn hình ngang 667x375. Căn giữa bằng
+ * margin auto thay cho `justify-center` để nó cuộn được từ đầu thay vì cắt mất tiêu đề.
+ */
+const COLUMN_CLASSES_WITH_ACCOUNT =
+  'flex h-full flex-col items-center gap-8 overflow-y-auto px-6 [&>:first-child]:mt-auto [&>:last-child]:mb-auto'
+const COLUMN = DUCKER_CONFIG ? COLUMN_CLASSES_WITH_ACCOUNT : COLUMN_CLASSES
 
 export function MenuScreen({
   best,
@@ -34,7 +46,7 @@ export function MenuScreen({
   onCustom: () => void
 }) {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-8 px-6">
+    <div className={COLUMN}>
       <ScreenTitle>{vi.menu.title}</ScreenTitle>
 
       <div className="flex w-full max-w-xs flex-col gap-3">
@@ -62,6 +74,9 @@ export function MenuScreen({
         </p>
         {/* Kỳ vọng chỉnh ở menu, TRƯỚC cú bấm "Bảng điểm" — F-08 · ADR-0020. */}
         <p className="text-[11px] tracking-wide text-muted">{vi.menu.localNote}</p>
+        {/* Đăng nhập Ducker ID tuỳ chọn (ADR-0021): chỉ định danh, không đồng bộ gì cả.
+            Cờ tắt thì AccountButton không render gì và cột này y hệt trước đây. */}
+        <AccountButton />
       </div>
     </div>
   )

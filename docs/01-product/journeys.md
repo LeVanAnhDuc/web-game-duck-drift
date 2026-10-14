@@ -185,3 +185,22 @@
 - Đặt tốc độ 0.6× và 6 mạng rồi tưởng mình đang phá kỷ lục: dòng cảnh báo và việc không có thứ hạng phải nói rõ điều đó ngay tại màn Hết lượt.
 
 **Chức năng liên quan:** FR-21
+
+## US-09 · Đăng nhập Ducker ID (tuỳ chọn)
+
+**Bối cảnh:** Chỉ có khi cờ tính năng bật và đủ cấu hình; bản trên GitHub Pages chưa có.
+
+**Các bước:**
+
+1. Ở menu chính, dưới dòng "Điểm chỉ lưu trên máy này", bấm "Đăng nhập".
+2. Trình duyệt sang Ducker ID, đăng nhập (hoặc đã đăng nhập sẵn), rồi quay về menu.
+3. Nút đổi thành avatar. Bấm vào để xem tên, email, "Mở hồ sơ Ducker ID" và "Đăng xuất".
+
+**Kết quả mong đợi:** Điểm, cài đặt và cách chơi không đổi. Tải lại trang là về chưa đăng nhập.
+
+**Điều gì có thể sai:**
+
+- Huỷ hoặc từ chối ở Ducker ID, state bị sửa, hoặc Ducker ID không trả lời: về chưa đăng nhập, im lặng, URL sạch.
+- Bấm "Đăng nhập" hai lần liên tiếp: chỉ một lần chuyển trang.
+
+**Chức năng liên quan:** FR-23

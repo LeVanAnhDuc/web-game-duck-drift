@@ -29,3 +29,4 @@
 | FR-20 | Ba mức độ khó sẵn (Dễ · Thường · Khó) đặt bốn núm cân bằng, chọn ngay ở menu    | US-07                 | xong       |
 | FR-21 | Chế độ Tuỳ chỉnh: màn riêng, bốn thanh trượt, ván không ghi bảng điểm           | US-08                 | xong       |
 | FR-22 | Bảng điểm tách theo mức: ba khoá riêng, ba tab, xoá theo tab đang mở            | US-06 · US-07         | xong       |
+| FR-23 | Đăng nhập Ducker ID tuỳ chọn (chỉ định danh): nút ở menu, avatar + tên, menu tài khoản; sau cờ tính năng, chưa bật ở bản deploy | US-09                 | xong       |
