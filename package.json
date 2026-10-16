@@ -20,7 +20,7 @@
     "release:notes": "pnpm dlx git-cliff@2.13.1 --unreleased --tag $(pnpm dlx git-cliff@2.13.1 --bumped-version) --strip all"
   },
   "dependencies": {
-    "next": "^15.5.0",
+    "next": "^15.5.27",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
