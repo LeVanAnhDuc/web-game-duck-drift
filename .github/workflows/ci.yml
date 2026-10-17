@@ -74,9 +74,14 @@ jobs:
         with:
           fail-on-severity: high
           comment-summary-in-pr: on-failure
+          # braces <= 3.0.3 (GHSA-vfj7-8cjw-p6xm, high) has no patched release at
+          # all. It only reaches the tree through build tooling - tailwindcss
+          # (chokidar, micromatch) and eslint-config-next (fast-glob) - so it never
+          # ships in the static export. Remove this line once a fixed braces exists.
+          allow-ghsas: GHSA-vfj7-8cjw-p6xm
 
   e2e:
-    name: Build and end-to-end
+    name: Build and regression suite
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -90,7 +95,9 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          cache-dependency-path: client/pnpm-lock.yaml
+          cache-dependency-path: |
+            client/pnpm-lock.yaml
+            automation-testing/pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
 
@@ -104,17 +111,34 @@ jobs:
       - name: First-load JS budget
         run: node scripts/check-bundle-size.mjs out
 
+      # Bản bật đăng nhập Ducker ID với issuer giả, cho module ducker-id (out-auth/).
+      - name: Build the sign-in e2e export
+        run: node scripts/build-e2e.mjs auth
+
+      # The regression suite is its own package (automation-testing/). Both exports
+      # are already built above, so CLIENT_PREBUILT=1 tells its webServer to only
+      # serve client/out and client/out-auth (scripts/serve.mjs), not build again.
+      - name: Install the regression suite
+        working-directory: automation-testing
+        run: pnpm install --frozen-lockfile
+
       - name: Install Chromium
+        working-directory: automation-testing
         run: pnpm exec playwright install --with-deps chromium
 
-      # Chạy trên out/ qua scripts/serve.mjs — đúng thứ GitHub Pages sẽ phục vụ —
-      # ở 375 / 768 / 1024 / 1440 và trên một điện thoại cảm ứng.
-      - name: End-to-end tests
-        run: pnpm test:e2e
+      - name: Typecheck, unit, traceability
+        working-directory: automation-testing
+        run: pnpm typecheck && pnpm test:unit && pnpm coverage:check
+
+      - name: Regression suite
+        working-directory: automation-testing
+        env:
+          CLIENT_PREBUILT: "1"
+        run: pnpm test
 
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: client/playwright-report/
+          path: automation-testing/playwright-report/
           retention-days: 7

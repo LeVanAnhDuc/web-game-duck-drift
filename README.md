@@ -118,17 +118,18 @@ emit, so a score that did not change costs no render.
 
 | Workflow                                       | When                                  | What it does                                                                                                                                                                                                                                                       |
 | ---------------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [`ci.yml`](.github/workflows/ci.yml)           | every pull request and push to `main` | Parallel jobs: lint + typecheck + unit tests; and build + first-load-JS budget + the end-to-end suite at five configurations. A third job, dependency review, runs on pull requests only — the action compares base against head, so a push has nothing to compare |
+| [`ci.yml`](.github/workflows/ci.yml)           | every pull request and push to `main` | Parallel jobs: lint + typecheck + unit tests; and build + first-load-JS budget + the `automation-testing/` regression suite. A third job, dependency review, runs on pull requests only — the action compares base against head, so a push has nothing to compare |
 | [`deploy.yml`](.github/workflows/deploy.yml)   | push to `main`                        | Rebuilds with `NEXT_PUBLIC_BASE_PATH=/<repo>` (never the sign-in flag) and publishes `client/out/` to Pages. It re-runs the tests rather than trusting a green run it cannot see                                                                                                                               |
 | [`release.yml`](.github/workflows/release.yml) | push to `main`                        | Works out the next version, composes the notes, and publishes a GitHub release                                                                                                                                                                                     |
 
-The end-to-end suite runs against the **static export** — the artifact Pages actually
-serves — at `375 / 768 / 1024 / 1440` and on a Pixel 5 with a real touch screen. That
-is the only automated check of the narrow layouts and of the 44px touch-target
-threshold. It deliberately does not assert on scores or entity positions: that is a
-real-time simulation on a shared runner, and a test depending on it goes red because
-the machine was busy, not because the game broke. The rules belong to the unit suite,
-which calls `step()` directly.
+The regression suite in `automation-testing/` runs against the **static export** — the
+artifact Pages actually serves — on desktop Chrome, on a Pixel 5 with a real touch screen,
+and on a second export with the Ducker ID sign-in switched on against a fake issuer. Every
+case traces back to a requirement and a test case (`pnpm coverage:check`), and the
+width-dependent checks loop over 320 to 1440px. Game time runs on Playwright's fake clock,
+so a game can be played to its end without the runner's speed deciding the outcome; scores
+are compared, never pinned. The rules themselves belong to the unit suite, which calls
+`step()` directly.
 
 Pages has to be switched on **once per repository**, with a token that has admin
 rights — the workflow's own `GITHUB_TOKEN` can deploy to an existing Pages site but
