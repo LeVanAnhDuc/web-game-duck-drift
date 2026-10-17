@@ -29,7 +29,7 @@
 - **Q3** Màn ngang thấp (điện thoại xoay ngang, 667×375): ở bản deploy (cờ đăng nhập tắt) tiêu đề "DUCK DRIFT" bị cắt
   ~24px phía trên (đo 2026-10-17: `y = -23,75`), các nút vẫn bấm được. US-03 chỉ nói cầm **dọc** và FR-17 không có khổ
   ngang, nên đây **không** phải requirement và không ghi bug; ghi lại ở đây làm quan sát. Bản bật đăng nhập đã xử lý
-  khổ này (TC-DUCKERID-010).
+  khổ này (TC-DUCKERID-014).
 
 ## Tài khoản test
 

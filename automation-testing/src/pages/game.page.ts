@@ -223,6 +223,10 @@ export class MenuScreen {
   localNote(): Locator {
     return this.page.getByText(copy.menu.localNote, { exact: true });
   }
+  /** The column that holds the title, the buttons and the lines under them. */
+  column(): Locator {
+    return this.heading().locator("xpath=..");
+  }
   async openHighScores(): Promise<void> {
     await this.highScoresButton().click();
     await this.page.getByRole("heading", { name: copy.highScores.title, exact: true }).waitFor();
@@ -491,23 +495,5 @@ export class AccountMenu {
   }
   signOut(): Locator {
     return this.page.getByRole("menuitem", { name: copy.account.signOut });
-  }
-  /**
-   * The static HTML already carries the sign-in button before JS loads, so a click can land on an unhydrated button.
-   * Retries until the signed-in trigger shows.
-   */
-  async signInWhenReady(): Promise<void> {
-    const trigger = this.trigger();
-    for (let i = 0; i < 20; i++) {
-      if (await trigger.isVisible()) return;
-      if (await this.signIn().isEnabled().catch(() => false)) await this.signIn().click({ timeout: 2000 }).catch(() => undefined);
-      try {
-        await trigger.waitFor({ timeout: 1000 });
-        return;
-      } catch {
-        // not yet: the click hit an unhydrated button, or the exchange is still running
-      }
-    }
-    await trigger.waitFor({ timeout: 1000 });
   }
 }
