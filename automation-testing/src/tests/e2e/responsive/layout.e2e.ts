@@ -1,61 +1,84 @@
-import { expect, test } from '@playwright/test'
+import { test, expect } from "@/fixtures";
+import type { Locator, Page } from "@playwright/test";
+import { copy } from "@/data/copy";
+import { STORAGE, entry, fullTable } from "@/data/test-data";
 
-/**
- * Chạy ở cả năm project của `playwright.config.ts`, nên mỗi assert dưới đây được
- * kiểm lại ở 375 / 768 / 1024 / 1440 và trên một điện thoại cảm ứng thật.
- *
- * Đây là thứ thay cho việc mở tay từng khổ màn hình: bố cục ba khổ hẹp trước đó
- * chưa từng được nhìn thấy chạy thật.
- */
+const WIDTHS = [320, 375, 768, 1024, 1440];
+const sizeOf = (width: number) => ({ width, height: width === 1440 ? 900 : 720 });
 
-test.describe('bố cục không bao giờ tràn ngang', () => {
-  test('màn hình chính', async ({ page }) => {
-    await page.goto('./')
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    )
-    expect(overflow).toBeLessThanOrEqual(0)
-  })
+async function insideViewport(page: Page, target: Locator): Promise<boolean> {
+  const box = (await target.boundingBox())!;
+  const size = page.viewportSize()!;
+  return box.x >= 0 && box.y >= 0 && box.x + box.width <= size.width + 0.5 && box.y + box.height <= size.height + 0.5;
+}
 
-  test('màn Cách chơi — màn dài nhất, và là màn dễ tràn nhất', async ({ page }) => {
-    await page.goto('./')
-    await page.getByRole('button', { name: 'Cách chơi', exact: true }).click()
-    await expect(page.getByRole('heading', { name: 'Cách chơi', exact: true })).toBeVisible()
+test("không màn nào cuộn ngang, từ 320 tới 1440px", { tag: ["@TC-RESPONSIVE-001", "@smoke"] }, async ({ page, gamePage }) => {
+  await gamePage.seedStorage({ [STORAGE.scores.normal]: fullTable() });
+  for (const width of WIDTHS) {
+    await page.setViewportSize(sizeOf(width));
+    await gamePage.goto();
+    expect(await gamePage.horizontalOverflow(), `${width} menu`).toBeLessThanOrEqual(0);
+    await gamePage.menu.openHelp();
+    expect(await gamePage.horizontalOverflow(), `${width} help`).toBeLessThanOrEqual(0);
+    await gamePage.help.back().click();
+    await gamePage.menu.openHighScores();
+    expect(await gamePage.highScores.rows().count()).toBe(10);
+    expect(await gamePage.horizontalOverflow(), `${width} high scores`).toBeLessThanOrEqual(0);
+    await gamePage.highScores.back().click();
+    await gamePage.menu.openCustom();
+    expect(await gamePage.horizontalOverflow(), `${width} custom`).toBeLessThanOrEqual(0);
+  }
+});
 
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    )
-    expect(overflow).toBeLessThanOrEqual(0)
-  })
+test("trong ván, canvas và HUD nằm trọn trong khung nhìn ở mọi khổ", { tag: ["@TC-RESPONSIVE-002", "@smoke"] }, async ({ page, gamePage }) => {
+  for (const width of WIDTHS) {
+    await page.setViewportSize(sizeOf(width));
+    await gamePage.goto();
+    await gamePage.start();
+    expect(await gamePage.horizontalOverflow(), `${width} in game`).toBeLessThanOrEqual(0);
+    for (const part of [gamePage.canvas(), gamePage.hud.score(), gamePage.hud.wave(), gamePage.hud.pauseButton()]) {
+      expect(await insideViewport(page, part), `${width}: ${part}`).toBe(true);
+    }
+  }
+});
 
-  test('bảng điểm', async ({ page }) => {
-    await page.goto('./')
-    await page.getByRole('button', { name: 'Bảng điểm', exact: true }).click()
-    await expect(page.getByRole('heading', { name: 'Bảng điểm', exact: true })).toBeVisible()
+test("nút, nút chọn mức và thanh trượt cao ít nhất 44px ở 320 và 1440", { tag: ["@TC-RESPONSIVE-003"] }, async ({ page, gamePage }) => {
+  for (const width of [320, 1440]) {
+    await page.setViewportSize(sizeOf(width));
+    await gamePage.goto();
+    const { menu } = gamePage;
+    const targets = [menu.play(), menu.highScoresButton(), menu.helpButton(), menu.customButton(), menu.preset("easy"), menu.preset("normal"), menu.preset("hard")];
+    for (const target of targets) {
+      expect((await target.boundingBox())!.height, `${width}: ${target}`).toBeGreaterThanOrEqual(44);
+    }
+    await menu.openCustom();
+    for (const label of [copy.custom.startLives, copy.custom.asteroidSpeed, copy.custom.dropChance, copy.custom.ufoFirstWave]) {
+      expect((await gamePage.custom.slider(label).boundingBox())!.height, `${width}: ${label}`).toBeGreaterThanOrEqual(44);
+    }
+  }
+});
 
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    )
-    expect(overflow).toBeLessThanOrEqual(0)
-  })
-})
+test("cột Ngày của bảng điểm ẩn dưới 640px, hiện từ 640px", { tag: ["@TC-RESPONSIVE-004"] }, async ({ page, gamePage }) => {
+  await gamePage.seedStorage({ [STORAGE.scores.normal]: [entry("ANA", 1200)] });
+  const [rank, name, score, wave, date] = copy.highScores.columns;
+  for (const [width, columns] of [
+    [375, [rank, name, score, wave]],
+    [639, [rank, name, score, wave]],
+    [640, [rank, name, score, wave, date]],
+    [1024, [rank, name, score, wave, date]],
+  ] as const) {
+    await page.setViewportSize({ width, height: 720 });
+    await gamePage.goto();
+    await gamePage.menu.openHighScores();
+    await expect(gamePage.highScores.columnHeaders(), `${width}`).toHaveText([...columns]);
+  }
+});
 
-test.describe('canvas', () => {
-  test('nằm gọn trong khung nhìn ở mọi khổ', async ({ page }) => {
-    await page.goto('./')
-    const canvas = page.locator('canvas')
-    await expect(canvas).toHaveCount(1)
-
-    const box = await canvas.boundingBox()
-    const viewport = page.viewportSize()
-    expect(box).not.toBeNull()
-    expect(viewport).not.toBeNull()
-    expect(box!.width).toBeLessThanOrEqual(viewport!.width + 1)
-    expect(box!.x).toBeGreaterThanOrEqual(0)
-  })
-
-  test('có nhãn thay thế cho người dùng trình đọc màn hình — NFR-A11Y-06', async ({ page }) => {
-    await page.goto('./')
-    await expect(page.getByRole('img', { name: /Khu vực chơi/ })).toHaveCount(1)
-  })
-})
+test("máy dùng chuột không thấy nút cảm ứng", { tag: ["@TC-RESPONSIVE-005"] }, async ({ page, gamePage }) => {
+  for (const width of [375, 1440]) {
+    await page.setViewportSize(sizeOf(width));
+    await gamePage.goto();
+    await gamePage.start();
+    for (const button of gamePage.touch.all()) await expect(button, `${width}: ${button}`).toHaveCount(0);
+  }
+});
