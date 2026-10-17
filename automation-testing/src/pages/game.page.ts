@@ -165,6 +165,11 @@ export class GamePage extends BasePage {
     return this.page.locator('[aria-live="polite"]');
   }
 
+  /** The pinch-zoom factor of the visual viewport (1 = not zoomed). */
+  async zoom(): Promise<number> {
+    return this.page.evaluate(() => window.visualViewport?.scale ?? 1);
+  }
+
   /** How far the page scrolls sideways; > 0 means content overflows the viewport. */
   async horizontalOverflow(): Promise<number> {
     return this.page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
@@ -430,6 +435,31 @@ export class CustomScreen {
 
 export class TouchControls {
   constructor(readonly page: Page) {}
+
+  /**
+   * Puts a real finger on a button through CDP and keeps it there until the returned release is called. A synthetic
+   * pointerdown is not enough: the hold button captures the pointer, and setPointerCapture rejects a pointer id the
+   * browser never saw go down.
+   */
+  async hold(target: Locator): Promise<() => Promise<void>> {
+    const box = (await target.boundingBox())!;
+    const cdp = await this.page.context().newCDPSession(this.page);
+    const point = { x: box.x + box.width / 2, y: box.y + box.height / 2, id: 1 };
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [point] });
+    return async () => {
+      await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+      await cdp.detach();
+    };
+  }
+
+  /** Whether a long-press menu would open: dispatches contextmenu on the button and reports if it was cancelled. */
+  async contextMenuBlocked(target: Locator): Promise<boolean> {
+    return target.evaluate((el) => {
+      const ev = new MouseEvent("contextmenu", { bubbles: true, cancelable: true });
+      el.dispatchEvent(ev);
+      return ev.defaultPrevented;
+    });
+  }
 
   button(name: string): Locator {
     return this.page.getByRole("button", { name, exact: true });
