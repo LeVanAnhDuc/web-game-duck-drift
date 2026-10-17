@@ -13,7 +13,7 @@ chứ không ở kỹ năng bắn trúng. Đây là giới hạn có chủ ý, k
 Không có Red Route nào cần đăng nhập, nhập email, hay gọi mạng: game là bản export tĩnh chạy
 hoàn toàn trong máy (ADR-0001).
 
-Toàn bộ UI bằng **tiếng Việt** (`src/i18n/vi.ts`). Persona phải đọc được tiếng Việt.
+Toàn bộ UI bằng **tiếng Việt** (`client/src/i18n/vi.ts`). Persona phải đọc được tiếng Việt.
 
 `entry` của mọi Red Route: `http://127.0.0.1:4173/`
 
@@ -41,7 +41,7 @@ Toàn bộ UI bằng **tiếng Việt** (`src/i18n/vi.ts`). Persona phải đọ
 - **why_red:** `journeys.md:132` viết thẳng ra mong đợi: "Biết luật chơi mà không phải chết vài
   lần để đoán ra". Hành trình này là chỗ duy nhất kiểm được lời hứa đó.
 - **status:** live
-- **derived_from:** `docs/01-product/journeys.md:122-138` (US-06) · `src/i18n/vi.ts:89-105`
+- **derived_from:** `docs/01-product/journeys.md:122-138` (US-06) · `client/src/i18n/vi.ts:89-105`
 
 ## RR-03 · Thấy game khó quá, chuyển sang mức dễ hơn rồi chơi tiếp
 
@@ -67,7 +67,7 @@ Toàn bộ UI bằng **tiếng Việt** (`src/i18n/vi.ts`). Persona phải đọ
   vào việc dòng cảnh báo nằm **trên** nút Chơi là đủ để người chơi đọc trước khi bấm. Hành
   trình này là cách duy nhất kiểm cược đó bằng người thật.
 - **status:** live
-- **derived_from:** `docs/01-product/journeys.md:167-187` (US-08) · `src/components/CustomScreen.tsx:53-56`
+- **derived_from:** `docs/01-product/journeys.md:167-187` (US-08) · `client/src/components/CustomScreen.tsx:53-56`
 
 ## RR-05 · Tìm bảng điểm, hiểu nó là bảng của ai và của mức nào
 

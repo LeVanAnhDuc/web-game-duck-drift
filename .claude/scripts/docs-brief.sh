@@ -53,13 +53,13 @@ for f in docs/01-product/overview.md docs/01-product/journeys.md docs/01-product
     *🟢*) green="$green $rel" ;;
   esac
 done
-if [ -f .env.example ]; then
-  est=$(grep -m1 '^# Trạng thái:' .env.example | sed 's/^# Trạng thái: *//')
+if [ -f client/.env.example ]; then
+  est=$(grep -m1 '^# Trạng thái:' client/.env.example | sed 's/^# Trạng thái: *//')
   case "$est" in
-    *🔴*) red="$red ../.env.example" ;;
-    *🟡*) yellow="$yellow ../.env.example" ;;
-    *⚪*) white="$white ../.env.example" ;;
-    *🟢*) green="$green ../.env.example" ;;
+    *🔴*) red="$red ../client/.env.example" ;;
+    *🟡*) yellow="$yellow ../client/.env.example" ;;
+    *⚪*) white="$white ../client/.env.example" ;;
+    *🟢*) green="$green ../client/.env.example" ;;
   esac
 fi
 

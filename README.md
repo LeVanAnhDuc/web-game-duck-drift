@@ -43,20 +43,23 @@ one you reach for least.
 
 ## Commands
 
+The game lives in `client/`:
+
 ```bash
+cd client
 pnpm install
 pnpm dev          # http://localhost:3000
 pnpm test         # unit + component tests
 pnpm test:e2e     # Playwright, against the static export in out/
 pnpm typecheck
 pnpm lint
-pnpm build        # writes out/
+pnpm build        # writes client/out/
 ```
 
 `pnpm test:e2e` needs a build first (`pnpm build`) and a Chromium install
 (`pnpm exec playwright install chromium`). No environment variables are needed to
-run locally — see [`.env.example`](.env.example).
-To try the Ducker ID sign-in locally, copy `.env.example` to `.env`, set
+run locally — see [`client/.env.example`](client/.env.example).
+To try the Ducker ID sign-in locally, copy `client/.env.example` to `client/.env`, set
 `NEXT_PUBLIC_DUCKER_CLIENT_ID`, and register `http://localhost:<port>/` as a redirect
 URI (the `.env.example` comments list the CORS origin to add as well).
 
@@ -79,15 +82,17 @@ pull request, plus Dependabot alerts.
 ## How it is put together
 
 ```
-src/
+client/
+ src/
   game/core/     the rules — plain TypeScript, no React, no DOM
   game/render/   Canvas 2D drawing, reads state and never writes it
   game/loop.ts   fixed 60 Hz timestep
   input/         keyboard and touch, both producing one InputState
   storage/       high scores behind a ScoreStore interface
   components/    the React UI outside the canvas
-e2e/             Playwright, against the static export
-scripts/         bundle budget, audit gate, static server, two release scripts
+ e2e/            Playwright, against the static export
+ scripts/        bundle budget, audit gate, static server
+docs/            product docs, requirements, ADRs, feature specs
 ```
 
 The rules are pure functions over a `GameState`, entered through a single
@@ -107,7 +112,7 @@ emit, so a score that did not change costs no render.
 | Workflow                                       | When                                  | What it does                                                                                                                                                                                                                                                       |
 | ---------------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | [`ci.yml`](.github/workflows/ci.yml)           | every pull request and push to `main` | Parallel jobs: lint + typecheck + unit tests; and build + first-load-JS budget + the end-to-end suite at five configurations. A third job, dependency review, runs on pull requests only — the action compares base against head, so a push has nothing to compare |
-| [`deploy.yml`](.github/workflows/deploy.yml)   | push to `main`                        | Rebuilds with `NEXT_PUBLIC_BASE_PATH=/<repo>` (never the sign-in flag) and publishes `out/` to Pages. It re-runs the tests rather than trusting a green run it cannot see                                                                                                                               |
+| [`deploy.yml`](.github/workflows/deploy.yml)   | push to `main`                        | Rebuilds with `NEXT_PUBLIC_BASE_PATH=/<repo>` (never the sign-in flag) and publishes `client/out/` to Pages. It re-runs the tests rather than trusting a green run it cannot see                                                                                                                               |
 | [`release.yml`](.github/workflows/release.yml) | push to `main`                        | Works out the next version, composes the notes, and publishes a GitHub release                                                                                                                                                                                     |
 
 The end-to-end suite runs against the **static export** — the artifact Pages actually
@@ -135,7 +140,7 @@ accessible by integration". See
 
 Version numbers and release notes are **derived from the commit history**, so neither
 depends on anyone remembering to do something. Both live in scripts you can run
-locally — a release process you can only exercise by pushing to `main` is one nobody
+locally (from `client/`) — a release process you can only exercise by pushing to `main` is one nobody
 exercises:
 
 ```bash

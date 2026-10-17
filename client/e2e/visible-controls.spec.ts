@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test'
 import { expect, test } from '@playwright/test'
 import { vi } from '../src/i18n/vi'
 
@@ -15,7 +16,7 @@ test.beforeEach(({}, testInfo) => {
   test.skip(!RUN_ON.includes(testInfo.project.name), 'chỉ hai đường pointer là khác nhau thật')
 })
 
-async function startGame(page: import('@playwright/test').Page) {
+async function startGame(page: Page) {
   await page.goto('/')
   await page.evaluate(() => {
     try {

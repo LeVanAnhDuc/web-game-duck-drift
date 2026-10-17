@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test'
 import { expect, test } from '@playwright/test'
 
 /**
@@ -26,7 +27,7 @@ test.beforeEach(({}, testInfo) => {
 })
 
 /** Vào trang với storage sạch, đã hydrate. */
-async function freshPage(page: import('@playwright/test').Page) {
+async function freshPage(page: Page) {
   await page.goto('/')
   await page.evaluate(() => {
     try {

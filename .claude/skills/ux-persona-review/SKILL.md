@@ -10,7 +10,7 @@ description: Use when you want to know how a real stranger experiences Duck Drif
 - Thư mục: `D:/Learn/web-app-ecosystem/web-game/web-game-asteroids`
 - Port: **`:4173`** — bản export tĩnh, đúng thứ GitHub Pages phục vụ. `:3000` là `pnpm dev`,
   **đừng dùng cho persona**: nó đụng client của Ducker ID, cũng Next.js, cũng `:3000`.
-- Bật app: `pnpm build && node scripts/serve.mjs 4173 out`
+- Bật app: `cd client && pnpm build && node scripts/serve.mjs 4173 out`
 - Dấu hiệu nhận biết đúng app: tab tên đúng `Duck Drift`; màn đầu là nền tối gần đen với
   chữ `DUCK DRIFT` và bốn nút `Chơi` · `Bảng điểm` · `Cách chơi` · `Tuỳ chỉnh`, phía trên
   nút `Chơi` là dãy `Dễ · Thường · Khó`. Thấy form đăng nhập hay chữ "Ducker" → **sai app,
@@ -18,14 +18,14 @@ description: Use when you want to know how a real stranger experiences Duck Drif
 - Email dùng-một-lần cho persona: **không áp dụng** — game không có tài khoản, không có
   backend, không có ô email nào (ADR-0001). Persona nào định "đăng ký" là đang lạc.
 - Tài khoản thử: **không có**. Không Red Route nào cần đăng nhập.
-- Ngôn ngữ UI: **tiếng Việt toàn bộ** (`src/i18n/vi.ts`, NFR-I18N-01). Persona phải là
+- Ngôn ngữ UI: **tiếng Việt toàn bộ** (`client/src/i18n/vi.ts`, NFR-I18N-01). Persona phải là
   người đọc tiếng Việt.
 
 ## Bật app — được phép tự bật, khác với mặc định
 
 `lib/orchestration.md` cấm tự bật app. Ở project này **ghi đè điều đó**: app là một bản
 export tĩnh, không backend, không database, không dữ liệu dùng chung; `:4173` là port riêng
-của chính project này (`playwright.config.ts`). Bật nó không phá được gì và không đụng
+của chính project này (`client/scripts/serve.mjs`). Bật nó không phá được gì và không đụng
 project khác. Cứ tự chạy hai lệnh trên rồi kiểm dấu hiệu nhận biết.
 
 Điều **không** được bỏ qua là bước đối chiếu dấu hiệu nhận biết. Đó mới là thứ bảo vệ bạn.
