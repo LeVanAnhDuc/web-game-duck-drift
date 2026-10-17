@@ -121,6 +121,19 @@ export class GamePage extends BasePage {
     await this.gameOver.heading().waitFor({ timeout: 1000 });
   }
 
+  /**
+   * The way a player who freezes reaches the game-over screen: a fresh page on a fake clock, optional stored data,
+   * the preset chosen on the menu (Hard by default: fewest lives), Play, then nothing until the last life is gone.
+   */
+  async idleToGameOver(preset: Preset = "hard", storage?: Record<string, unknown>): Promise<void> {
+    await this.page.clock.install();
+    if (storage) await this.seedStorage(storage);
+    else await this.goto();
+    await this.menu.choose(preset);
+    await this.start();
+    await this.runUntilGameOver();
+  }
+
   /** Sends a key press the game listens for on window (the keyboard handler is not bound to a focused element). */
   async press(key: string): Promise<void> {
     await this.page.keyboard.press(key);
@@ -334,6 +347,15 @@ export class HighScoresScreen {
   /** One row as its visible cells: [rank, initials, score, wave, (date)]. */
   async row(index: number): Promise<string[]> {
     return (await this.rows().nth(index).locator("td:visible").allInnerTexts()).map((t) => t.trim());
+  }
+  /** Indexes of the rows drawn with a background (the row just saved is highlighted, the others are not). */
+  async highlightedRows(): Promise<number[]> {
+    return this.rows().evaluateAll((rows) =>
+      rows.flatMap((row, i) => {
+        const bg = getComputedStyle(row).backgroundColor;
+        return bg === "rgba(0, 0, 0, 0)" || bg === "transparent" ? [] : [i];
+      }),
+    );
   }
   columnHeaders(): Locator {
     return this.panel().locator("thead th:visible");
