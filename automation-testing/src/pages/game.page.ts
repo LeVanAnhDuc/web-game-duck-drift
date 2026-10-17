@@ -112,11 +112,15 @@ export class GamePage extends BasePage {
   /**
    * Lets the simulation run until the game is over. Needs page.clock installed before goto(): the loop reads
    * performance.now and requestAnimationFrame, both faked, so an idle Hard game ends in ~20 fake seconds.
+   *
+   * Advances in 250 ms jumps, one animation frame each: the loop caps a frame at MAX_FRAME_S = 0.25 s and runs it as
+   * 15 fixed steps, so the simulation is the same as at 60 fps but draws 15x fewer canvas frames. runFor() drew
+   * every 16 ms frame (~1200 per game, ~15 s real time), and a test that plays two games timed out under load.
    */
   async runUntilGameOver(maxSeconds = 180): Promise<void> {
     for (let s = 0; s < maxSeconds; s += 2) {
       if (await this.gameOver.heading().isVisible()) return;
-      await this.page.clock.runFor(2000);
+      for (let f = 0; f < 8; f++) await this.page.clock.fastForward(250);
     }
     await this.gameOver.heading().waitFor({ timeout: 1000 });
   }

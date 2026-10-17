@@ -25,6 +25,9 @@ test("giảm chuyển động thì transition của DOM tắt", { tag: ["@TC-ACC
 });
 
 test("giảm chuyển động không đổi gameplay", { tag: ["@TC-ACCESSIBILITY-009"] }, async ({ page, gamePage }) => {
+  // Two runs of 10 s drawn frame by frame (reduced motion changes what is drawn, so frames are not skipped):
+  // ~16 s alone, too close to the 30 s default under parallel load.
+  test.slow();
   await page.clock.install({ time: new Date("2026-10-17T08:00:00Z") });
   await page.clock.pauseAt(new Date("2026-10-17T08:00:01Z"));
   await gamePage.goto();

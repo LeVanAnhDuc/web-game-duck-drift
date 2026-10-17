@@ -3,16 +3,18 @@
 **Kiểm thế nào.** Một file mỗi module: `<module>.md`.
 
 ```md
-### TC-SIGNIN-007 — email chưa đăng ký hiện thông báo và đóng được bằng OK
+### TC-<MODULE>-NNN — <tên test, đúng như trong spec>
 
-- **Requirement:** REQ-SIGNIN-04
+- **Requirement:** REQ-<MODULE>-NN
 - **Layer:** e2e · **Priority:** P1 · **Tags:** @smoke
-- **Tiền điều kiện:** email ngẫu nhiên chưa đăng ký
-- **Bước:** nhập email → `Continue` → bấm `OK` trên thông báo
-- **Mong đợi:** thông báo `User <email> does not exist` có nút `OK`, vẫn ở `/sign-in`
-- **Kiểm chứng thêm:** response 404 `US0002`
-- **Automated:** `tests/e2e/sign-in/email-step.e2e.ts`
+- **Tiền điều kiện:** <trạng thái cần có trước, nếu có>
+- **Bước:** <thao tác> → <thao tác>
+- **Mong đợi:** <điều người chơi thấy>
+- **Kiểm chứng thêm:** <tín hiệu phụ, nếu có>
+- **Automated:** `tests/e2e/<module>/<file>.e2e.ts`
 ```
+
+Mẫu dùng chỗ giữ chỗ `<...>` chứ không dùng mã thật, để `grep "### TC-"` đếm đúng số case thật (`pnpm coverage:check` vốn bỏ qua README).
 
 - Mã `TC-<MODULE>-NNN` cố định. Tiêu đề TC = **tên test** trong spec.
 - `Automated`: đường dẫn tính từ `src/`, hoặc `manual — <lý do>`. Spec đó phải có test gắn tag `@TC-<MODULE>-NNN`.
