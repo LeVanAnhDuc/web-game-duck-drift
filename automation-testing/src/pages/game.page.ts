@@ -126,6 +126,23 @@ export class GamePage extends BasePage {
     await this.page.keyboard.press(key);
   }
 
+  /**
+   * Dispatches a cancelable keydown on window (where the game listens) and reports whether the game claimed it
+   * with preventDefault — the same call that stops the browser from scrolling or pressing a focused button.
+   */
+  async keyIsClaimed(code: string): Promise<boolean> {
+    return this.page.evaluate((c) => {
+      const down = new KeyboardEvent("keydown", { code: c, bubbles: true, cancelable: true });
+      window.dispatchEvent(down);
+      window.dispatchEvent(new KeyboardEvent("keyup", { code: c, bubbles: true, cancelable: true }));
+      return down.defaultPrevented;
+    }, code);
+  }
+
+  async scrollY(): Promise<number> {
+    return this.page.evaluate(() => window.scrollY);
+  }
+
   canvas(): Locator {
     return this.page.getByRole("img", { name: copy.a11y.canvasLabel });
   }
