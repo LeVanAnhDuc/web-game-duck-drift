@@ -39,8 +39,10 @@ jobs:
           fetch-depth: 0
 
       # Only here to provide `pnpm dlx`. The version comes from `packageManager`
-      # in package.json, so this job and the local command run the same git-cliff.
+      # in client/package.json, so this job and the local command run the same git-cliff.
       - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: client/package.json
 
       - name: Work out the version
         id: v

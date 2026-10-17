@@ -1,28 +1,28 @@
-
 # Bí mật — `.env.example` là bản mẫu và ĐƯỢC commit; `.env` là bản thật và không bao giờ commit.
 .env
 .env.*
 !.env.example
 
-# Phụ thuộc và kết quả build
-/node_modules/
-/.next/
-/out/
-/out-auth/
+# Phụ thuộc và kết quả build — app nằm ở client/, bộ test hồi quy ở automation-testing/
+node_modules/
+.next/
+/client/out/
+/client/out-auth/
 next-env.d.ts
 *.tsbuildinfo
 npm-debug.log*
 
 # Công cụ
-/coverage/
+coverage/
 .DS_Store
 dev.log
 
-# Playwright
-/playwright-report/
-/test-results/
-/blob-report/
-/playwright/.cache/
+# Playwright (automation-testing/ và mọi phiên MCP ở máy)
+playwright-report/
+test-results/
+blob-report/
+playwright/.cache/
+.auth/
 RELEASE_NOTES.md
 
 # --- Claude Code: theo doi config + skills, bo qua worktrees/doc-state ---
@@ -34,7 +34,7 @@ RELEASE_NOTES.md
 !/.claude/agents/
 
 # Playwright MCP scratch
-/.playwright-mcp/
+.playwright-mcp/
 
 # Git worktrees cuc bo (feature-flow)
 /.worktrees/

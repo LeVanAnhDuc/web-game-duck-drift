@@ -19,13 +19,15 @@ set -uo pipefail
 root="$(git rev-parse --show-toplevel)"
 
 # Chỉ file còn tồn tại (A/C/M/R) — file vừa xoá thì không có gì để lint.
-mapfile -t staged < <(git diff --cached --name-only --diff-filter=ACMR -- '*.ts' '*.tsx')
+# Chỉ file của app trong client/: ESLint config nằm ở đó; automation-testing/ có
+# typecheck riêng và không dùng config của app.
+mapfile -t staged < <(git diff --cached --name-only --diff-filter=ACMR -- 'client/*.ts' 'client/*.tsx' | sed 's|^client/||')
 
 if [ "${#staged[@]}" -eq 0 ]; then
   exit 0
 fi
 
-cd "$root" || exit 1
+cd "$root/client" || exit 1
 
 if ! pnpm exec eslint --max-warnings=0 "${staged[@]}"; then
   printf '\n  Commit bị chặn: ESLint báo lỗi ở file đang staged.\n' >&2

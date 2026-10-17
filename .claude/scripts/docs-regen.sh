@@ -53,11 +53,11 @@ build_readme_block() {
   n=$(find docs/decisions -type f -name '[0-9]*.md' 2>/dev/null | wc -l | tr -d ' ')
   printf '| [`decisions/`](decisions/README.md) | Tại sao lại làm thế này? | %s ADR | mỗi quyết định kỹ thuật |\n' "$n"
 
-  if [ -f .env.example ]; then
-    ans=$(grep -m1 '^# Trả lời câu hỏi:' .env.example | sed 's/^# Trả lời câu hỏi: *//')
-    st=$(grep -m1 '^# Trạng thái:' .env.example | sed 's/^# Trạng thái: *//')
-    wh=$(grep -m1 '^# Cập nhật khi:' .env.example | sed 's/^# Cập nhật khi: *//')
-    printf '| [`../.env.example`](../.env.example) | %s | %s | %s |\n' \
+  if [ -f client/.env.example ]; then
+    ans=$(grep -m1 '^# Trả lời câu hỏi:' client/.env.example | sed 's/^# Trả lời câu hỏi: *//')
+    st=$(grep -m1 '^# Trạng thái:' client/.env.example | sed 's/^# Trạng thái: *//')
+    wh=$(grep -m1 '^# Cập nhật khi:' client/.env.example | sed 's/^# Cập nhật khi: *//')
+    printf '| [`../client/.env.example`](../client/.env.example) | %s | %s | %s |\n' \
       "$(esc "$(trunc "${ans:-Cần biến môi trường nào để chạy?}" 58)")" \
       "$(esc "$(trunc "${st:-—}" 44)")" "$(esc "$(trunc "${wh:-—}" 58)")"
   fi
@@ -100,16 +100,16 @@ rm -f "$tmp"
 
 # ── kiểm tra: biến môi trường code đọc mà .env.example không có ─────────
 check_env() {
-  [ -f .env.example ] || return 0
+  [ -f client/.env.example ] || return 0
   local names miss="" n
   names=$(grep -rhoE '(process\.env\.[A-Z][A-Z0-9_]*|import\.meta\.env\.[A-Z][A-Z0-9_]*|os\.getenv\("[A-Z][A-Z0-9_]*"|os\.Getenv\("[A-Z][A-Z0-9_]*"|getenv\("[A-Z][A-Z0-9_]*")' . \
     --include='*.ts' --include='*.tsx' --include='*.js' --include='*.jsx' --include='*.mjs' \
     --include='*.py' --include='*.go' --include='*.rs' --include='*.java' \
-    --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=.claude \
+    --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=.claude --exclude-dir=automation-testing --exclude-dir=.worktrees \
     --exclude-dir=dist --exclude-dir=build --exclude-dir=.next 2>/dev/null \
     | grep -oE '[A-Z][A-Z0-9_]{2,}' | sort -u)
   for n in $names; do
-    grep -qE "(^|[^A-Z0-9_])$n([^A-Z0-9_]|$)" .env.example || miss="$miss $n"
+    grep -qE "(^|[^A-Z0-9_])$n([^A-Z0-9_]|$)" client/.env.example || miss="$miss $n"
   done
   [ -n "$miss" ] && echo "⚠️  .env.example thiếu biến mà code đang đọc:$miss"
   return 0
