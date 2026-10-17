@@ -23,12 +23,12 @@ import { expect, test } from '@playwright/test'
  * 10/10 xanh trong 22 giây, chạy chung cả suite thì đỏ ngẫu nhiên một test.
  */
 test.beforeEach(({}, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop-1440', 'test hành vi, chạy một khổ là đủ')
+  test.skip(testInfo.project.name !== 'app', 'test hành vi, chạy một khổ là đủ')
 })
 
 /** Vào trang với storage sạch, đã hydrate. */
 async function freshPage(page: Page) {
-  await page.goto('/')
+  await page.goto('./')
   await page.evaluate(() => {
     try {
       localStorage.clear()

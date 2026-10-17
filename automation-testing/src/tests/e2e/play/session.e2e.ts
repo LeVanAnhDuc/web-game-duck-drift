@@ -20,7 +20,7 @@ async function startGame(page: Page) {
 
 test.describe('bắt đầu một ván', () => {
   test('bấm Chơi thì vào thẳng ván, không có màn chờ', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
     await startGame(page)
 
     await expect(page.getByRole('heading', { name: 'DUCK DRIFT', exact: true })).toHaveCount(0)
@@ -28,7 +28,7 @@ test.describe('bắt đầu một ván', () => {
   })
 
   test('HUD hiện wave và điểm ngay từ đầu', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
     await startGame(page)
 
     await expect(page.getByTestId('hud-wave')).toBeVisible()
@@ -36,7 +36,7 @@ test.describe('bắt đầu một ván', () => {
   })
 
   test('vòng lặp thật sự chạy — wave 1 được sinh ra', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
     await startGame(page)
 
     // `wave` chỉ nhảy lên 1 khi `step()` đã chạy ít nhất một lần và sinh wave.
@@ -46,7 +46,7 @@ test.describe('bắt đầu một ván', () => {
 
 test.describe('tạm dừng — US-04', () => {
   test('Esc mở overlay, Tiếp tục đóng nó', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
     await startGame(page)
 
     await page.keyboard.press('Escape')
@@ -57,7 +57,7 @@ test.describe('tạm dừng — US-04', () => {
   })
 
   test('nút tạm dừng trên HUD làm đúng việc đó', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
     await startGame(page)
 
     await page.getByRole('button', { name: 'Tạm dừng', exact: true }).click()
@@ -65,7 +65,7 @@ test.describe('tạm dừng — US-04', () => {
   })
 
   test('Về menu bỏ ván đang chơi', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
     await startGame(page)
 
     await page.keyboard.press('Escape')
@@ -74,7 +74,7 @@ test.describe('tạm dừng — US-04', () => {
   })
 
   test('chuyển sang tab khác thì tự tạm dừng — FR-15', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
     await startGame(page)
 
     // Cách duy nhất bắt chước được việc tab bị ẩn mà không đóng trang.
@@ -89,7 +89,7 @@ test.describe('tạm dừng — US-04', () => {
 
 test.describe('bàn phím — FR-14', () => {
   test('phím game không cuộn trang', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
     await startGame(page)
 
     for (const key of ['ArrowUp', 'ArrowDown', 'Space']) {
@@ -99,7 +99,7 @@ test.describe('bàn phím — FR-14', () => {
   })
 
   test('vùng aria-live tồn tại để công bố diễn biến — NFR-A11Y-06', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
     await startGame(page)
 
     await expect(page.locator('[aria-live="polite"]')).toHaveCount(1)
@@ -108,11 +108,11 @@ test.describe('bàn phím — FR-14', () => {
 
 test.describe('nút cảm ứng — US-03', () => {
   test('chỉ xuất hiện trên thiết bị cảm ứng', async ({ page }, testInfo) => {
-    await page.goto('/')
+    await page.goto('./')
     await startGame(page)
 
     const fire = page.getByRole('button', { name: 'Bắn', exact: true })
-    if (testInfo.project.name === 'touch-phone') {
+    if (testInfo.project.name === 'app-touch') {
       await expect(fire).toBeVisible()
     } else {
       await expect(fire).toHaveCount(0)
@@ -120,9 +120,9 @@ test.describe('nút cảm ứng — US-03', () => {
   })
 
   test('năm nút, không nút nào nhỏ hơn 44px — NFR-A11Y-03', async ({ page }, testInfo) => {
-    test.skip(testInfo.project.name !== 'touch-phone', 'chỉ có nghĩa trên màn cảm ứng')
+    test.skip(testInfo.project.name !== 'app-touch', 'chỉ có nghĩa trên màn cảm ứng')
 
-    await page.goto('/')
+    await page.goto('./')
     await startGame(page)
 
     for (const name of ['Xoay trái', 'Xoay phải', 'Đẩy', 'Bắn', 'Dịch chuyển']) {
@@ -134,9 +134,9 @@ test.describe('nút cảm ứng — US-03', () => {
   })
 
   test('nút cảm ứng không làm trang cuộn hay phóng to khi chạm', async ({ page }, testInfo) => {
-    test.skip(testInfo.project.name !== 'touch-phone', 'chỉ có nghĩa trên màn cảm ứng')
+    test.skip(testInfo.project.name !== 'app-touch', 'chỉ có nghĩa trên màn cảm ứng')
 
-    await page.goto('/')
+    await page.goto('./')
     await startGame(page)
 
     const thrust = page.getByRole('button', { name: 'Đẩy', exact: true })

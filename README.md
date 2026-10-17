@@ -50,14 +50,21 @@ cd client
 pnpm install
 pnpm dev          # http://localhost:3000
 pnpm test         # unit + component tests
-pnpm test:e2e     # Playwright, against the static export in out/
 pnpm typecheck
 pnpm lint
 pnpm build        # writes client/out/
 ```
 
-`pnpm test:e2e` needs a build first (`pnpm build`) and a Chromium install
-(`pnpm exec playwright install chromium`). No environment variables are needed to
+The end-to-end regression suite is its own package in `automation-testing/`; it builds
+and serves the static export itself:
+
+```bash
+cd automation-testing
+pnpm install && pnpm exec playwright install chromium
+pnpm test         # Playwright, against the static export
+```
+
+No environment variables are needed to
 run locally — see [`client/.env.example`](client/.env.example).
 To try the Ducker ID sign-in locally, copy `client/.env.example` to `client/.env`, set
 `NEXT_PUBLIC_DUCKER_CLIENT_ID`, and register `http://localhost:<port>/` as a redirect
@@ -90,8 +97,8 @@ client/
   input/         keyboard and touch, both producing one InputState
   storage/       high scores behind a ScoreStore interface
   components/    the React UI outside the canvas
- e2e/            Playwright, against the static export
- scripts/        bundle budget, audit gate, static server
+ scripts/        bundle budget, audit gate, static server, e2e builds
+automation-testing/  Playwright regression suite: requirements, test cases, specs
 docs/            product docs, requirements, ADRs, feature specs
 ```
 

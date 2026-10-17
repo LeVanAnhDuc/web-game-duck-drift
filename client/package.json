@@ -12,7 +12,6 @@
     "format": "prettier --write \"**/*.{ts,tsx,css,md,json}\" --end-of-line auto",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
     "check:bundle": "node scripts/check-bundle-size.mjs out",
     "check:audit": "pnpm audit --json | node scripts/check-audit.mjs",
@@ -25,7 +24,6 @@
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.48.0",
     "@testing-library/dom": "^10.0.0",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.0",

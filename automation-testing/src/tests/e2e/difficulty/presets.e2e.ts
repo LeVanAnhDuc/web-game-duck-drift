@@ -8,7 +8,7 @@ import { expect, test } from '@playwright/test'
 
 test.describe('chọn độ khó — US-07', () => {
   test('ba mức ở menu, Thường được chọn sẵn', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     const group = page.getByRole('group', { name: 'Độ khó' })
     await expect(group.getByRole('button')).toHaveCount(3)
@@ -19,7 +19,7 @@ test.describe('chọn độ khó — US-07', () => {
   })
 
   test('lựa chọn mức sống qua một lần tải lại trang', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     // Bấm được nghĩa là React đã hydrate; nếu chưa thì cú bấm mất hẳn.
     await expect(async () => {
@@ -40,7 +40,7 @@ test.describe('chọn độ khó — US-07', () => {
   })
 
   test('bảng điểm có ba tab', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     await expect(async () => {
       await page.getByRole('button', { name: 'Bảng điểm', exact: true }).click({ timeout: 2000 })
@@ -51,7 +51,7 @@ test.describe('chọn độ khó — US-07', () => {
 
 test.describe('chế độ Tuỳ chỉnh — US-08', () => {
   test('bốn thanh trượt, vùng bấm không nhỏ hơn 44px — NFR-A11Y-03', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     await expect(async () => {
       await page.getByRole('button', { name: 'Tuỳ chỉnh', exact: true }).click({ timeout: 2000 })
@@ -67,7 +67,7 @@ test.describe('chế độ Tuỳ chỉnh — US-08', () => {
   })
 
   test('vào ván từ màn Tuỳ chỉnh được', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('./')
 
     await expect(async () => {
       await page.getByRole('button', { name: 'Tuỳ chỉnh', exact: true }).click({ timeout: 2000 })

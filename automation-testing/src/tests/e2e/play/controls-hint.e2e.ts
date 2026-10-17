@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test'
 import { expect, test } from '@playwright/test'
-import { vi } from '../src/i18n/vi'
+import { vi } from '../../../../../client/src/i18n/vi'
 
 /**
  * F-02 · F-03 của UX review 2026-09-11.
@@ -10,14 +10,14 @@ import { vi } from '../src/i18n/vi'
  * nên đó là hai thứ thật sự khác nhau. Ba khổ còn lại chỉ là bố cục và `layout.spec.ts`
  * đã sở hữu chúng; chạy thêm chỉ làm các worker đói CPU (xem nợ kỹ thuật ở backlog).
  */
-const RUN_ON = ['desktop-1440', 'touch-phone']
+const RUN_ON = ['app', 'app-touch']
 
 test.beforeEach(({}, testInfo) => {
   test.skip(!RUN_ON.includes(testInfo.project.name), 'chỉ hai đường pointer là khác nhau thật')
 })
 
 async function startGame(page: Page) {
-  await page.goto('/')
+  await page.goto('./')
   await page.evaluate(() => {
     try {
       localStorage.clear()
@@ -39,7 +39,7 @@ async function startGame(page: Page) {
 
 test.describe('người vào ván biết mình bấm gì — F-02', () => {
   test('chuột/bàn phím: gợi ý có mặt lúc vào ván, và nêu đúng ba phím', async ({ page }, testInfo) => {
-    test.skip(testInfo.project.name !== 'desktop-1440', 'đường không cảm ứng')
+    test.skip(testInfo.project.name !== 'app', 'đường không cảm ứng')
     await startGame(page)
 
     const hint = page.getByText(new RegExp(vi.hud.controlsHint))
@@ -48,7 +48,7 @@ test.describe('người vào ván biết mình bấm gì — F-02', () => {
   })
 
   test('gợi ý KHÔNG biến mất chỉ vì điểm lên', async ({ page }, testInfo) => {
-    test.skip(testInfo.project.name !== 'desktop-1440', 'đường không cảm ứng')
+    test.skip(testInfo.project.name !== 'app', 'đường không cảm ứng')
     await startGame(page)
 
     const hint = page.getByText(new RegExp(vi.hud.controlsHint))
@@ -61,7 +61,7 @@ test.describe('người vào ván biết mình bấm gì — F-02', () => {
   })
 
   test('cảm ứng: KHÔNG hiện chữ, vì đã có năm nút thật', async ({ page }, testInfo) => {
-    test.skip(testInfo.project.name !== 'touch-phone', 'đường cảm ứng')
+    test.skip(testInfo.project.name !== 'app-touch', 'đường cảm ứng')
     await startGame(page)
 
     // Chống hồi quy cho §0 của design.md: nửa F-02 nói "ở 375px không có nút nào"
