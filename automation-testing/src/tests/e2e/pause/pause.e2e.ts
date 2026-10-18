@@ -74,7 +74,11 @@ test("đang tạm dừng thì thời gian trôi không đổi gì", { tag: ["@TC
   await page.clock.runFor(500);
   await gamePage.press("Escape");
   const before = await snapshot(gamePage);
-  await page.clock.runFor(60_000);
+  // 60 fake seconds, but not as one runFor(60_000): the loop keeps drawing while paused, so that is ~3600 canvas
+  // frames (~22s even alone) and it timed out under parallel load. 2s of real-cadence frames, then 58 one-second
+  // jumps (one frame each, dt clamped to 0.25s — 15 steps a frame if the paused branch ever simulated).
+  await page.clock.runFor(2_000);
+  for (let s = 0; s < 58; s++) await page.clock.fastForward(1_000);
   await expect(gamePage.pause.heading()).toBeVisible();
   expect(await snapshot(gamePage)).toEqual(before);
 });

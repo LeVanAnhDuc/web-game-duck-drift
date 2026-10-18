@@ -39,7 +39,7 @@ Lăng kính: 1 truy vết · 2 phân vùng · 3 biên · 4 chuyển trạng thá
 
 - **Requirement:** REQ-PAUSE-03
 - **Layer:** e2e · **Priority:** P1 · **Lăng kính:** 4
-- **Bước:** vào ván (mức Khó) → Esc → 60 giây giả trôi
+- **Bước:** vào ván (mức Khó) → Esc → 60 giây giả trôi (2 giây từng frame + 58 lần nhảy 1 giây)
 - **Mong đợi:** điểm, mạng, wave như lúc tạm dừng; overlay vẫn mở
 - **Automated:** `tests/e2e/pause/pause.e2e.ts`
 
