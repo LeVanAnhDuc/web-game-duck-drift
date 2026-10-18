@@ -14,11 +14,14 @@ Mỗi thư mục trong `src/` có `README.md` nói rõ chứa gì, không chứa
   bỏ bước build khi chạy lại.
 - **prd = GitHub Pages dưới `/web-game-duck-drift/`.** `baseURL` giữ path và kết thúc bằng `/`, nên page object đi tới
   `./` — **không bao giờ** `/…` (dấu `/` đầu bỏ mất path).
-- **Game thời gian thực trên canvas.** Luật chơi (va chạm, điểm, power-up, UFO) thuộc unit test của app (`step()` gọi
-  thẳng). Ở đây chỉ kiểm phần chỉ có nghĩa trong trình duyệt: màn hình, HUD, phím, nút cảm ứng, lưu trữ, bố cục. Cần
-  ván chạy tới một trạng thái (vd hết lượt) thì dùng `page.clock` (install → `runFor`): vòng lặp đọc `performance.now`
-  và `requestAnimationFrame`, cả hai đều giả được, nên một ván đứng yên ở mức Khó hết lượt sau ~25 giây giả, không
-  tốn 25 giây thật. Không `waitForTimeout`.
+- **Game thời gian thực trên canvas.** Unit test của app gọi `step()` thẳng; ở đây kiểm phần chỉ có nghĩa trong trình
+  duyệt (màn hình, HUD, phím, nút cảm ứng, lưu trữ, bố cục) và luật chơi qua bản build thật (`scoring`, `hyperspace`,
+  `power-ups`, `world`). Thứ chỉ canvas thấy (vị trí tàu, thiên thạch, đạn) đọc qua `GamePage.world` (`WorldProbe`: lấy
+  `GameState` từ React fiber của canvas); đặt sẵn tình huống (thiên thạch trước mũi tàu, vật phẩm dưới tàu) là setup,
+  làm khi đồng hồ giả đứng yên (`GamePage.startFrozen`) — xem `src/docs/decisions/scoring.md` Q1. UFO và hiệu ứng vẫn
+  để unit test. Cần ván chạy tới một trạng thái (vd hết lượt) thì dùng `page.clock` (install → `runFor`): vòng lặp
+  đọc `performance.now` và `requestAnimationFrame`, cả hai đều giả được, nên một ván đứng yên ở mức Khó hết lượt sau
+  ~25 giây giả, không tốn 25 giây thật. Không `waitForTimeout`.
 - **Dữ liệu dựng sẵn** ghi thẳng vào khoá localStorage của chính game (`asteroids.highscores.*`, `asteroids.difficulty.v1`,
   `asteroids.tuning.v1`) qua `GamePage.seedStorage` trước khi trang chạy — định dạng lưu của app, không phải API riêng cho test.
 - **Project:** `app` (Desktop Chrome), `app-touch` (Pixel 5, chỉ `tests/e2e/touch/`), `app-auth` (bản bật cờ, chỉ

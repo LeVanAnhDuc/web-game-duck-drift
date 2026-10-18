@@ -2,6 +2,7 @@ import type { Locator, Page } from "@playwright/test";
 import { BasePage } from "./base.page";
 import { copy } from "@/data/copy";
 import type { Preset } from "@/data/test-data";
+import { WorldProbe } from "@/components/world-probe.component";
 
 const PRESET_NAME: Record<Preset, string> = {
   easy: copy.difficulty.easy,
@@ -28,6 +29,8 @@ export class GamePage extends BasePage {
   readonly custom: CustomScreen;
   readonly touch: TouchControls;
   readonly account: AccountMenu;
+  /** The world behind the canvas (ship, asteroids, bullets, power-ups): read it, or arrange it as test setup. */
+  readonly world: WorldProbe;
 
   constructor(page: Page) {
     super(page);
@@ -40,6 +43,7 @@ export class GamePage extends BasePage {
     this.custom = new CustomScreen(page);
     this.touch = new TouchControls(page);
     this.account = new AccountMenu(page);
+    this.world = new WorldProbe(page);
   }
 
   // ── navigation ──────────────────────────────────────────────────────────
@@ -136,6 +140,29 @@ export class GamePage extends BasePage {
     await this.menu.choose(preset);
     await this.start();
     await this.runUntilGameOver();
+  }
+
+  /**
+   * A fresh Normal (or given) game on a FROZEN fake clock: nothing moves until the test advances page.clock, so a
+   * spec can arrange the world between two ticks. Ends after the first tenth of a second, wave 1 on the field.
+   */
+  async startFrozen(preset: Preset = "normal"): Promise<void> {
+    await this.page.clock.install({ time: new Date("2026-10-17T08:00:00Z") });
+    await this.page.clock.pauseAt(new Date("2026-10-17T08:00:01Z"));
+    await this.goto();
+    if (preset !== "normal") await this.menu.choose(preset);
+    await this.start();
+    await this.page.clock.runFor(100);
+  }
+
+  /**
+   * Holds a key down for `ms` of game time, then lets go. A plain press is lost on a frozen clock: keydown and keyup
+   * both land before the next simulation step, and the game reads keys as held / not held each step.
+   */
+  async hold(key: string, ms: number): Promise<void> {
+    await this.page.keyboard.down(key);
+    await this.page.clock.runFor(ms);
+    await this.page.keyboard.up(key);
   }
 
   /** Sends a key press the game listens for on window (the keyboard handler is not bound to a focused element). */
@@ -267,6 +294,23 @@ export class Hud {
   }
   pauseButton(): Locator {
     return this.page.getByRole("button", { name: copy.hud.pause, exact: true });
+  }
+  /** Every pip in the lives group: one ship per life, plus the shield mark while the shield slot is full. */
+  pips(): Locator {
+    return this.livesGroup().locator("svg");
+  }
+  /** The weapon row under the HUD (mark, name, time bar, seconds); only present while a weapon is in the slot. */
+  weaponSeconds(): Locator {
+    return this.page.getByText(/^\d+s$/);
+  }
+  weaponBar(): Locator {
+    return this.weaponSeconds().locator("xpath=..");
+  }
+  weaponName(name: string): Locator {
+    return this.weaponBar().getByText(name, { exact: true });
+  }
+  async weaponSecondsValue(): Promise<number> {
+    return Number(((await this.weaponSeconds().textContent()) ?? "").replace(/\D/g, ""));
   }
   /** The keyboard hint under the canvas (mouse/keyboard devices only). */
   controlsHint(): Locator {
@@ -471,6 +515,21 @@ export class TouchControls {
 
   button(name: string): Locator {
     return this.page.getByRole("button", { name, exact: true });
+  }
+
+  /** Everything a button can say about itself: name, text, title, description, disabled state and look (class). */
+  async describe(target: Locator): Promise<Record<string, string | null>> {
+    return target.evaluate((el) => ({
+      label: el.getAttribute("aria-label"),
+      className: el.getAttribute("class"),
+      text: (el as HTMLElement).innerText.trim(),
+      title: el.getAttribute("title"),
+      description: el.getAttribute("aria-description") ?? el.getAttribute("aria-describedby"),
+      disabled: String((el as HTMLButtonElement).disabled),
+      ariaDisabled: el.getAttribute("aria-disabled"),
+      busy: el.getAttribute("aria-busy"),
+      dataState: Object.entries((el as HTMLElement).dataset).map(([k, v]) => `${k}=${v}`).join(","),
+    }));
   }
   all(): Locator[] {
     const a = copy.a11y;

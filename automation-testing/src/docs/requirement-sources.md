@@ -28,7 +28,10 @@ một nơi bị bỏ/đóng băng, sửa bảng này trong cùng lượt.
 - `../client/src/hooks/` — cầu nối React ↔ lõi game (`useGame`: tự tạm dừng khi ẩn tab), đăng nhập, menu tài khoản
 - `../client/src/storage/` — khoá localStorage của bảng điểm (một khoá mỗi mức) và cài đặt (mức, bốn núm), validate dữ liệu
 - `../client/src/input/` — bàn phím (phím theo pha) và cảm ứng (`pointer: coarse`)
-- `../client/src/game/core/constants.ts` — bốn núm của ba mức sẵn và biên của thanh trượt
+- `../client/src/game/core/constants.ts` — bốn núm của ba mức sẵn và biên của thanh trượt; số cân bằng (điểm, thời gian
+  hồi, hiệu lực vật phẩm, kích thước wave) mà các module `scoring`, `hyperspace`, `power-ups`, `world` đo
+- `../client/src/game/core/` (`step.ts`, `collision.ts`, `asteroids.ts`, `ship.ts`, `bullets.ts`, `powerups.ts`,
+  `score.ts`, `spawn.ts`, `vector.ts`) — luật chơi mà bốn module đó kiểm qua bản build thật
 - `../client/src/auth/` — đăng nhập Ducker ID (OIDC + PKCE) sau cờ tính năng
 - `../client/scripts/build-e2e.mjs`, `../client/scripts/serve.mjs` — hai bản build (cờ tắt / bật với issuer giả) và server tĩnh mà suite này dùng
 

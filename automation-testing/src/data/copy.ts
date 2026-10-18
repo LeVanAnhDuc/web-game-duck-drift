@@ -107,10 +107,19 @@ export const copy = {
     ["Đạn xuyên", "Đạn không mất khi trúng"],
     ["Thêm mạng", "Cộng ngay một mạng"],
   ],
+  // vi.powerUps.<kind>.name — the HUD weapon bar shows the name of the weapon in the slot
+  powerUpName: {
+    shield: "Khiên",
+    rapid: "Bắn nhanh",
+    spread: "Bắn toả",
+    pierce: "Đạn xuyên",
+    life: "Thêm mạng",
+  },
   announce: {
     // vi.announce.*
     waveStart: (n: number) => `Wave ${n}`,
     lifeLost: (left: number) => `Mất một mạng. Còn ${left} mạng.`,
+    extraLife: "Được thêm một mạng",
     gameOver: (score: number) => `Hết lượt. Tổng điểm ${score}.`,
   },
   a11y: {
