@@ -1,0 +1,23 @@
+# Dependabot version updates. The repo holds two packages: the game app in client/
+# and the regression suite in automation-testing/ (each with its own pnpm lockfile);
+# workflow actions live at the root. Weekly and a small PR limit, so updates arrive
+# as a steady trickle rather than a flood that nobody reviews.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /client
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: npm
+    directory: /automation-testing
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
