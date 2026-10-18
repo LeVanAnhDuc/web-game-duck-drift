@@ -9,4 +9,8 @@ chỉ vài trang → tạo trong page cần nó.
 Quy tắc như `pages/`: locator lazy, hành động người dùng, không assertion nghiệp vụ.
 UI chỉ xuất hiện ở một trang thì để trong page đó, không tách ra đây.
 
+`world-probe.component.ts` (`WorldProbe`, dùng qua `GamePage.world`) là ngoại lệ có chủ ý: không phải UI mà là cửa
+sổ vào thế giới vẽ trên canvas — đọc `GameState`, và dựng tình huống làm setup. Lý do và giới hạn:
+`docs/decisions/scoring.md` Q1.
+
 **Import được:** `data/`, `@playwright/test`. Không import `pages/`, `api/`, `fixtures/`.

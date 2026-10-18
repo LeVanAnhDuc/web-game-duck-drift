@@ -40,7 +40,10 @@ Không có.
 
 - Tạm dừng, tự tạm dừng khi ẩn tab, không mô phỏng bù: module `pause`. Hết lượt: `game-over`.
 - Nút cảm ứng và việc không hiện chữ gợi ý trên màn cảm ứng: `touch`.
-- Hiệu ứng (particle, rung màn), power-up, UFO, hyperspace, +1 mạng mỗi 10.000 điểm: luật của lõi game, unit test.
+- Luật chơi từng chỉ để cho unit test nay có module e2e riêng (2026-10-18): điểm khi vỡ và +1 mạng mỗi 10.000 điểm →
+  `scoring`; hyperspace và thời gian hồi → `hyperspace`; năm vật phẩm và khe vũ khí → `power-ups`; bọc mép và wave
+  tăng dần → `world`.
+- Hiệu ứng (particle, rung màn) và UFO: chỉ vẽ trên canvas / xuất hiện ngẫu nhiên, vẫn để unit test của lõi.
 
 ## Tech debt liên quan
 
