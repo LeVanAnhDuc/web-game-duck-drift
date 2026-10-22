@@ -62,7 +62,7 @@ jobs:
       # accessible by integration". `GITHUB_TOKEN` có `pages: write` nên deploy
       # được, nhưng TẠO Pages site cần quyền admin repo mà nó không có. Việc bật
       # Pages vì vậy là một bước một-lần ở ngoài workflow — xem ADR-0008.
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
 
       - uses: actions/upload-pages-artifact@v3
         with:
