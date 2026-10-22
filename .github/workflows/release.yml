@@ -40,7 +40,7 @@ jobs:
 
       # Only here to provide `pnpm dlx`. The version comes from `packageManager`
       # in client/package.json, so this job and the local command run the same git-cliff.
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         with:
           package_json_file: client/package.json
 
