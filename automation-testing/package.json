@@ -14,7 +14,7 @@
     "report": "playwright show-report"
   },
   "devDependencies": {
-    "@playwright/test": "1.64.0",
+    "@playwright/test": "1.64.1",
     "@types/node": "^22.10.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
